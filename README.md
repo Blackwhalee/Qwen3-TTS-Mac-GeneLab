@@ -16,6 +16,10 @@
   <a href="README_EN.md">English</a> | 日本語
 </p>
 
+<p align="center">
+  <img src="assets/UI-customVoice.png" alt="Custom Voice UI" width="80%">
+</p>
+
 ---
 
 ## なぜ Qwen3-TTS-Mac-GeneLab か？
@@ -100,6 +104,10 @@ http://localhost:7860 を開く
 
 ### カスタムボイス (Custom Voice)
 
+<p align="center">
+  <img src="assets/UI-customVoice.png" alt="Custom Voice Tab" width="700">
+</p>
+
 9種類のプリセットスピーカーから選択して音声を生成。感情指示も可能。
 
 | スピーカー | 特徴 | 言語 |
@@ -118,6 +126,10 @@ http://localhost:7860 を開く
 
 ### ボイスデザイン (Voice Design)
 
+<p align="center">
+  <img src="assets/UI-voiceDesign.png" alt="Voice Design Tab" width="700">
+</p>
+
 テキストで声の特徴を説明し、その特徴に合った声を生成。
 
 ```
@@ -126,6 +138,10 @@ http://localhost:7860 を開く
 ```
 
 ### ボイスクローン (Voice Clone)
+
+<p align="center">
+  <img src="assets/UI-voiceClone.png" alt="Voice Clone Tab" width="700">
+</p>
 
 わずか **3秒** の参照音声から、その声で新しいテキストを読み上げ。
 
@@ -136,6 +152,10 @@ http://localhost:7860 を開く
 > **注意**: Voice Clone は **Base モデル** (約 3.8GB) が必要です。初回実行時に自動ダウンロードされます。
 
 ### 設定
+
+<p align="center">
+  <img src="assets/UI-settings.png" alt="Settings Tab" width="700">
+</p>
 
 - エンジン選択 (AUTO / MLX / PyTorch MPS)
 - メモリモニター

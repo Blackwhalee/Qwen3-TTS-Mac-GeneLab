@@ -16,6 +16,10 @@
   English | <a href="README.md">日本語</a>
 </p>
 
+<p align="center">
+  <img src="assets/UI-customVoice.png" alt="Custom Voice UI" width="80%">
+</p>
+
 ---
 
 ## Why Qwen3-TTS-Mac-GeneLab?
@@ -100,6 +104,10 @@ Navigate to http://localhost:7860
 
 ### Custom Voice
 
+<p align="center">
+  <img src="assets/UI-customVoice.png" alt="Custom Voice Tab" width="700">
+</p>
+
 Generate speech from 9 preset speakers with optional emotion control.
 
 | Speaker | Characteristics | Languages |
@@ -118,6 +126,10 @@ Generate speech from 9 preset speakers with optional emotion control.
 
 ### Voice Design
 
+<p align="center">
+  <img src="assets/UI-voiceDesign.png" alt="Voice Design Tab" width="700">
+</p>
+
 Generate voice by describing characteristics in text.
 
 ```
@@ -126,6 +138,10 @@ Example: "An energetic young female voice with high pitch."
 ```
 
 ### Voice Clone
+
+<p align="center">
+  <img src="assets/UI-voiceClone.png" alt="Voice Clone Tab" width="700">
+</p>
 
 Clone a voice from just **3 seconds** of reference audio.
 
@@ -136,6 +152,10 @@ Clone a voice from just **3 seconds** of reference audio.
 > **Note**: Voice Clone requires the **Base model** (~3.8GB). It will be auto-downloaded on first use.
 
 ### Settings
+
+<p align="center">
+  <img src="assets/UI-settings.png" alt="Settings Tab" width="700">
+</p>
 
 - Engine selection (AUTO / MLX / PyTorch MPS)
 - Memory monitor
