@@ -281,6 +281,11 @@ class PyTorchMPSEngine:
             dtype = get_optimal_dtype(task_type, self._device)
             attn_impl = get_attn_implementation()
 
+            logger.info(f"  モデル: {model_name}")
+            logger.info(f"  dtype: {dtype}")
+            logger.info(f"  device: {self._device}")
+            logger.info(f"  attention: {attn_impl}")
+
             # MPS の場合は device_map を使わず、ロード後に .to() で移動
             self._model = Qwen3TTSModel.from_pretrained(
                 model_name,
@@ -298,9 +303,47 @@ class PyTorchMPSEngine:
             elapsed = time.time() - start_time
             logger.info(f"PyTorch MPS モデルのロード完了: {elapsed:.2f}秒")
 
+        except ImportError as e:
+            error_msg = (
+                f"必要なパッケージがインストールされていません: {e}\n"
+                "解決策: pip install -e . を実行してください。"
+            )
+            logger.error(error_msg)
+            raise RuntimeError(error_msg) from e
+
+        except OSError as e:
+            if "No space left" in str(e) or "disk" in str(e).lower():
+                error_msg = (
+                    f"ディスク容量が不足しています: {e}\n"
+                    f"モデル '{model_name}' のダウンロードには約4GB必要です。\n"
+                    "解決策: 不要なファイルを削除してディスク容量を確保してください。"
+                )
+            else:
+                error_msg = (
+                    f"モデルファイルの読み込みに失敗しました: {e}\n"
+                    "解決策: ネットワーク接続を確認し、再試行してください。"
+                )
+            logger.error(error_msg)
+            raise RuntimeError(error_msg) from e
+
         except Exception as e:
-            logger.error(f"PyTorch MPS モデルのロードに失敗: {e}")
-            raise
+            error_str = str(e)
+            # よくあるエラーパターンを検出
+            if "CUDA" in error_str or "cuda" in error_str:
+                hint = "ヒント: このプロジェクトは Apple Silicon Mac 向けです。CUDA は使用できません。"
+            elif "out of memory" in error_str.lower() or "oom" in error_str.lower():
+                hint = (
+                    "ヒント: メモリ不足です。他のアプリを閉じるか、"
+                    "量子化モデル (8bit) を使用してください。"
+                )
+            elif "connection" in error_str.lower() or "network" in error_str.lower():
+                hint = "ヒント: ネットワーク接続を確認してください。"
+            else:
+                hint = f"モデル: {model_name}, タスク: {task_type.value}"
+
+            error_msg = f"PyTorch MPS モデルのロードに失敗しました: {e}\n{hint}"
+            logger.error(error_msg)
+            raise RuntimeError(error_msg) from e
 
     def generate(
         self,
@@ -361,7 +404,10 @@ class PyTorchMPSEngine:
             # VoiceDesign の場合
             elif task_type == TaskType.VOICE_DESIGN:
                 if not voice_description:
-                    raise ValueError("VoiceDesign には voice_description が必要です。")
+                    raise ValueError(
+                        "VoiceDesign には voice_description (声の説明) が必要です。\n"
+                        "例: 'A calm middle-aged male voice with a warm tone.'"
+                    )
 
                 wavs, sr = self._model.generate_voice_design(
                     text=text,
@@ -372,8 +418,23 @@ class PyTorchMPSEngine:
 
             # Voice Clone の場合
             elif task_type == TaskType.VOICE_CLONE:
-                if reference_audio is None or reference_text is None:
-                    raise ValueError("Voice Clone には reference_audio と reference_text が必要です。")
+                if reference_audio is None:
+                    raise ValueError(
+                        "Voice Clone には参照音声 (reference_audio) が必要です。\n"
+                        "3秒以上のクリアな音声ファイルをアップロードしてください。"
+                    )
+                if reference_text is None:
+                    raise ValueError(
+                        "Voice Clone には参照音声のテキスト (reference_text) が必要です。\n"
+                        "Whisper で自動書き起こしするか、手動で入力してください。"
+                    )
+
+                # 参照音声の長さを確認
+                ref_duration = len(reference_audio) / reference_sr
+                if ref_duration < 1.0:
+                    logger.warning(f"参照音声が短すぎます ({ref_duration:.1f}秒)。3秒以上を推奨します。")
+                elif ref_duration > 30.0:
+                    logger.warning(f"参照音声が長すぎます ({ref_duration:.1f}秒)。10秒程度を推奨します。")
 
                 # 参照音声を (audio, sr) のタプル形式で渡す
                 ref_audio_tuple = (reference_audio, reference_sr)
@@ -396,11 +457,42 @@ class PyTorchMPSEngine:
             if not isinstance(audio, np.ndarray):
                 audio = np.array(audio, dtype=np.float32)
 
+            logger.info(f"音声生成完了: {len(audio)/sr:.2f}秒")
             return audio, sr
 
-        except Exception as e:
-            logger.error(f"PyTorch MPS 音声生成エラー: {e}")
+        except ValueError:
+            # ValueError はそのまま再送出（ユーザー入力エラー）
             raise
+
+        except RuntimeError as e:
+            error_str = str(e)
+            if "probability tensor contains" in error_str:
+                error_msg = (
+                    "Voice Clone で数値エラーが発生しました。\n"
+                    "原因: float16/bf16 では Voice Clone が不安定です。\n"
+                    "解決策: 自動的に float32 が選択されるはずですが、"
+                    "問題が続く場合はモデルを再ロードしてください。"
+                )
+                logger.error(error_msg)
+                raise RuntimeError(error_msg) from e
+            elif "out of memory" in error_str.lower():
+                error_msg = (
+                    "メモリ不足エラーが発生しました。\n"
+                    "解決策:\n"
+                    "  1. 他のアプリケーションを閉じる\n"
+                    "  2. 短いテキストで試す\n"
+                    "  3. 設定でモデルをアンロードして再試行"
+                )
+                logger.error(error_msg)
+                raise RuntimeError(error_msg) from e
+            else:
+                logger.error(f"音声生成中にランタイムエラー: {e}")
+                raise
+
+        except Exception as e:
+            error_msg = f"音声生成中に予期しないエラーが発生しました: {e}"
+            logger.error(error_msg)
+            raise RuntimeError(error_msg) from e
 
     def unload(self) -> None:
         """モデルをアンロードしてメモリを解放する。"""
