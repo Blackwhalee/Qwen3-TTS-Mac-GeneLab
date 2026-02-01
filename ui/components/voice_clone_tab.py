@@ -114,6 +114,7 @@ def generate_cloned_audio(
             language=language,
             reference_audio=ref_audio,
             reference_text=reference_text,
+            reference_sr=ref_sr,
             speed=speed,
         )
 

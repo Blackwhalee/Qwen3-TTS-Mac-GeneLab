@@ -228,6 +228,8 @@ class PyTorchMPSEngine:
         self._model: Any = None
         self._model_name: str | None = None
         self._device: str = get_optimal_device()
+        self._task_type: TaskType | None = None
+        self._dtype: Any = None
 
     @property
     def is_available(self) -> bool:
@@ -241,15 +243,26 @@ class PyTorchMPSEngine:
 
     def load_model(
         self,
-        model_name: str = "Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice",
+        model_name: str | None = None,
         task_type: TaskType = TaskType.CUSTOM_VOICE,
     ) -> None:
         """PyTorch モデルをロードする。
 
         Args:
-            model_name: HuggingFace モデル名
+            model_name: HuggingFace モデル名（None の場合はタスクに応じて自動選択）
             task_type: タスクの種類（dtype 選択に使用）
         """
+        # モデル名の自動選択
+        if model_name is None:
+            if task_type == TaskType.CUSTOM_VOICE:
+                model_name = "Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice"
+            elif task_type == TaskType.VOICE_DESIGN:
+                model_name = "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign"
+            elif task_type == TaskType.VOICE_CLONE:
+                model_name = "Qwen/Qwen3-TTS-12Hz-1.7B-Base"
+            else:
+                model_name = "Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice"
+
         if self._model is not None and self._model_name == model_name:
             logger.info(f"モデル '{model_name}' は既にロードされています。")
             return
@@ -268,14 +281,19 @@ class PyTorchMPSEngine:
             dtype = get_optimal_dtype(task_type, self._device)
             attn_impl = get_attn_implementation()
 
+            # MPS の場合は device_map を使わず、ロード後に .to() で移動
             self._model = Qwen3TTSModel.from_pretrained(
                 model_name,
                 torch_dtype=dtype,
                 attn_implementation=attn_impl,
-                device_map=self._device,
             )
+            # MPS にモデルを移動
+            if self._device == "mps":
+                self._model.model = self._model.model.to(self._device)
+
             self._model_name = model_name
             self._dtype = dtype
+            self._task_type = task_type
 
             elapsed = time.time() - start_time
             logger.info(f"PyTorch MPS モデルのロード完了: {elapsed:.2f}秒")
@@ -294,6 +312,7 @@ class PyTorchMPSEngine:
         voice_description: str | None = None,
         reference_audio: np.ndarray | None = None,
         reference_text: str | None = None,
+        reference_sr: int = 24000,
         speed: float = 1.0,
         progress_callback: Callable[[float], None] | None = None,
     ) -> tuple[np.ndarray, int]:
@@ -308,6 +327,7 @@ class PyTorchMPSEngine:
             voice_description: ボイスデザイン記述
             reference_audio: 参照音声（Voice Clone 用）
             reference_text: 参照音声のテキスト（Voice Clone 用）
+            reference_sr: 参照音声のサンプルレート
             speed: 速度
             progress_callback: 進捗コールバック
 
@@ -317,49 +337,55 @@ class PyTorchMPSEngine:
         if not self.is_loaded:
             raise RuntimeError("モデルがロードされていません。先に load_model() を呼んでください。")
 
+        # タスクタイプが異なる場合は自動的にリロード
+        if hasattr(self, "_task_type") and self._task_type != task_type:
+            logger.info(f"タスクタイプが変更されました ({self._task_type} -> {task_type})。モデルを再ロードします。")
+            self.load_model(model_name=None, task_type=task_type)
+
         logger.info(f"PyTorch MPS で音声生成中: '{text[:50]}...'")
 
         try:
             # CustomVoice の場合
             if task_type == TaskType.CUSTOM_VOICE:
                 # 感情指示を組み込み
-                speaker_text = f"[{speaker}]: "
-                if emotion:
-                    speaker_text = f"[{speaker}]({emotion}): "
+                instruct = emotion if emotion else None
 
-                audio, sr = self._model.synthesize(
+                wavs, sr = self._model.generate_custom_voice(
                     text=text,
-                    speaker=speaker_text,
+                    speaker=speaker,
                     language=language,
+                    instruct=instruct,
                 )
+                audio = wavs[0] if isinstance(wavs, list) else wavs
 
             # VoiceDesign の場合
             elif task_type == TaskType.VOICE_DESIGN:
                 if not voice_description:
                     raise ValueError("VoiceDesign には voice_description が必要です。")
 
-                audio, sr = self._model.synthesize_with_voice_design(
+                wavs, sr = self._model.generate_voice_design(
                     text=text,
-                    voice_description=voice_description,
+                    instruct=voice_description,
                     language=language,
                 )
+                audio = wavs[0] if isinstance(wavs, list) else wavs
 
             # Voice Clone の場合
             elif task_type == TaskType.VOICE_CLONE:
                 if reference_audio is None or reference_text is None:
                     raise ValueError("Voice Clone には reference_audio と reference_text が必要です。")
 
-                from qwen_tts import VoiceClonePromptItem
+                # 参照音声を (audio, sr) のタプル形式で渡す
+                ref_audio_tuple = (reference_audio, reference_sr)
 
-                prompt = VoiceClonePromptItem(
-                    audio=reference_audio,
-                    text=reference_text,
-                )
-                audio, sr = self._model.synthesize_with_voice_clone(
+                wavs, sr = self._model.generate_voice_clone(
                     text=text,
-                    voice_clone_prompt=prompt,
                     language=language,
+                    ref_audio=ref_audio_tuple,
+                    ref_text=reference_text,
+                    x_vector_only_mode=False,  # ICL モードを使用
                 )
+                audio = wavs[0] if isinstance(wavs, list) else wavs
 
             else:
                 raise ValueError(f"不明なタスクタイプ: {task_type}")
@@ -489,17 +515,13 @@ class DualEngine:
         if self._current_engine is not None and self._current_engine is not engine:
             self._current_engine.unload()
 
-        # モデル名のデフォルト
-        if model_name is None:
-            if isinstance(engine, MLXEngine):
-                model_name = "mlx-community/Qwen3-TTS-12Hz-1.7B-CustomVoice-8bit"
-            else:
-                model_name = "Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice"
-
-        # モデルをロード
+        # モデルをロード (model_name が None の場合、各エンジンがタスクに応じて自動選択)
         if isinstance(engine, MLXEngine):
+            if model_name is None:
+                model_name = "mlx-community/Qwen3-TTS-12Hz-1.7B-CustomVoice-8bit"
             engine.load_model(model_name)
         else:
+            # PyTorch エンジンは model_name=None の場合、タスクタイプに応じて自動選択
             engine.load_model(model_name, task_type)
 
         self._current_engine = engine
@@ -514,6 +536,7 @@ class DualEngine:
         voice_description: str | None = None,
         reference_audio: np.ndarray | None = None,
         reference_text: str | None = None,
+        reference_sr: int = 24000,
         speed: float = 1.0,
         progress_callback: Callable[[float], None] | None = None,
     ) -> GenerationResult:
@@ -564,6 +587,7 @@ class DualEngine:
                 voice_description=voice_description,
                 reference_audio=reference_audio,
                 reference_text=reference_text,
+                reference_sr=reference_sr,
                 speed=speed,
                 progress_callback=progress_callback,
             )
