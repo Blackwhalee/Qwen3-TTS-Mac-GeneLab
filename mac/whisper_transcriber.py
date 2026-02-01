@@ -73,7 +73,7 @@ class WhisperTranscriber:
 
     def __init__(
         self,
-        model_name: str = "mlx-community/whisper-large-v3-turbo",
+        model_name: str = "mlx-community/whisper-large-v3-turbo-asr-fp16",
         prefer_mlx: bool = True,
     ) -> None:
         """初期化。
@@ -96,9 +96,9 @@ class WhisperTranscriber:
         """利用可能なエンジンをチェックする。"""
         # MLX Whisper チェック
         try:
-            import mlx_audio  # noqa: F401
+            from mlx_audio.stt import load_model as mlx_load_model  # noqa: F401
             self._mlx_available = True
-            logger.info("MLX Whisper が利用可能です。")
+            logger.info("MLX Whisper (mlx-audio) が利用可能です。")
         except ImportError:
             logger.info("MLX Whisper が利用できません。")
 
@@ -122,10 +122,8 @@ class WhisperTranscriber:
         start_time = time.time()
 
         try:
-            from mlx_audio.stt import transcribe as mlx_transcribe
-            # モデルは transcribe 関数内で自動的にロードされる
-            self._mlx_transcribe = mlx_transcribe
-            self._mlx_model = True  # ロード済みフラグ
+            from mlx_audio.stt import load_model as mlx_load_model
+            self._mlx_model = mlx_load_model(self._model_name)
 
             elapsed = time.time() - start_time
             logger.info(f"MLX Whisper モデルのロード完了: {elapsed:.2f}秒")
@@ -167,22 +165,31 @@ class WhisperTranscriber:
         start_time = time.time()
 
         try:
-            # MLX Whisper の transcribe 関数を使用
-            result = self._mlx_transcribe(
+            # MLX Whisper の generate メソッドを使用
+            decode_options = {}
+            if language and language != "auto":
+                decode_options["language"] = language
+
+            result = self._mlx_model.generate(
                 audio_path,
-                model=self._model_name,
-                language=language if language and language != "auto" else None,
+                verbose=False,
+                **decode_options,
             )
 
-            # 結果のパース（mlx-audio のバージョンによって形式が異なる場合あり）
+            # 結果のパース
             if isinstance(result, dict):
                 text = result.get("text", "")
                 detected_lang = result.get("language", language or "unknown")
+            elif hasattr(result, "text"):
+                text = result.text
+                detected_lang = getattr(result, "language", language or "unknown")
             elif isinstance(result, str):
                 text = result
                 detected_lang = language or "unknown"
             else:
-                text = str(result)
+                # ジェネレータの場合、全てのセグメントを結合
+                segments = list(result)
+                text = " ".join(seg.get("text", "") if isinstance(seg, dict) else str(seg) for seg in segments)
                 detected_lang = language or "unknown"
 
             processing_time = time.time() - start_time

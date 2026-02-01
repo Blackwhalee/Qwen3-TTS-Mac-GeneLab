@@ -29,14 +29,17 @@ fi
 ENV_NAME="qwen3-tts-mac-genelab"
 
 # conda の初期化
-if [ -f "$HOME/miniforge3/etc/profile.d/conda.sh" ]; then
+if [ -f "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/conda.sh" ]; then
+    source "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/conda.sh"
+elif [ -f "$HOME/miniforge3/etc/profile.d/conda.sh" ]; then
     source "$HOME/miniforge3/etc/profile.d/conda.sh"
 elif [ -f "$HOME/mambaforge/etc/profile.d/conda.sh" ]; then
     source "$HOME/mambaforge/etc/profile.d/conda.sh"
-elif [ -f "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/conda.sh" ]; then
-    source "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/conda.sh"
 elif command -v conda &> /dev/null; then
     eval "$(conda shell.bash hook)"
+else
+    echo "エラー: conda が見つかりません。"
+    exit 1
 fi
 
 # 環境をアクティベート
