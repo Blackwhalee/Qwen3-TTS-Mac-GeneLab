@@ -1,0 +1,195 @@
+{
+  "app": {
+    "title": "Qwen3-TTS-Mac-GeneLab",
+    "subtitle": "Apple Silicon Mac に最適化された音声合成"
+  },
+  "tabs": {
+    "custom_voice": "カスタムボイス",
+    "voice_design": "ボイスデザイン",
+    "voice_clone": "ボイスクローン",
+    "settings": "設定"
+  },
+  "custom_voice": {
+    "title": "カスタムボイス",
+    "description": "9種類のプリセットスピーカーから選択して音声を生成します。",
+    "text_input": {
+      "label": "読み上げテキスト",
+      "placeholder": "ここに読み上げたいテキストを入力してください..."
+    },
+    "speaker_selector": {
+      "label": "スピーカー選択",
+      "info": "9種類のプリセットボイスから選択してください"
+    },
+    "language_selector": {
+      "label": "言語",
+      "info": "出力音声の言語を選択"
+    },
+    "emotion_selector": {
+      "label": "感情",
+      "info": "感情を指定（オプション）"
+    },
+    "speed_slider": {
+      "label": "速度",
+      "info": "0.5（遅い）〜 2.0（速い）"
+    },
+    "generate_button": "音声を生成",
+    "audio_output": "生成された音声",
+    "status": "ステータス"
+  },
+  "voice_design": {
+    "title": "ボイスデザイン",
+    "description": "テキストでボイスの特徴を説明すると、その特徴に合った声で音声を生成します。",
+    "text_input": {
+      "label": "読み上げテキスト",
+      "placeholder": "ここに読み上げたいテキストを入力してください..."
+    },
+    "voice_description": {
+      "label": "ボイスの説明",
+      "placeholder": "例: A calm middle-aged male voice with a warm tone.",
+      "info": "声の特徴を英語で記述してください（日本語でも可）"
+    },
+    "generate_button": "音声を生成",
+    "audio_output": "生成された音声",
+    "status": "ステータス"
+  },
+  "voice_clone": {
+    "title": "ボイスクローン",
+    "description": "わずか3秒の参照音声から、その声で新しいテキストを読み上げます。",
+    "reference_audio": {
+      "label": "参照音声（3〜30秒推奨）"
+    },
+    "reference_language": {
+      "label": "参照音声の言語"
+    },
+    "transcribe_button": "Whisper で書き起こし",
+    "reference_text": {
+      "label": "参照音声のテキスト",
+      "placeholder": "参照音声で話されている内容を入力、または上のボタンで自動書き起こし...",
+      "info": "正確なテキストを入力すると、より高品質なクローンが可能です"
+    },
+    "text_input": {
+      "label": "読み上げテキスト",
+      "placeholder": "クローンした声で読み上げたいテキストを入力してください..."
+    },
+    "output_language": {
+      "label": "出力言語",
+      "info": "生成音声の言語"
+    },
+    "generate_button": "音声を生成",
+    "audio_output": "生成された音声",
+    "status": "ステータス",
+    "tips": {
+      "title": "ヒント",
+      "items": [
+        "参照音声は **3〜30秒** が最適",
+        "**静かな環境** で録音された音声を使用",
+        "参照音声のテキストは **正確に** 入力",
+        "多言語対応: 日本語の声で英語を話すことも可能"
+      ]
+    }
+  },
+  "settings": {
+    "title": "設定",
+    "engine": {
+      "title": "エンジン設定",
+      "selector": {
+        "label": "優先エンジン",
+        "info": "AUTO: タスクに応じて自動選択。MLX: 高速・省メモリ。MPS: Voice Clone 用。",
+        "options": {
+          "auto": "AUTO（推奨）",
+          "mlx": "MLX（Apple Silicon 最適化）",
+          "pytorch_mps": "PyTorch MPS"
+        }
+      },
+      "status_button": "エンジン状態を更新",
+      "change_button": "エンジンを変更"
+    },
+    "memory": {
+      "title": "メモリ管理",
+      "usage_label": "メモリ使用量",
+      "refresh_button": "更新",
+      "unload_button": "全モデルをアンロード",
+      "estimates": {
+        "title": "メモリ使用量の目安"
+      }
+    },
+    "system_info": {
+      "title": "システム情報",
+      "refresh_button": "システム情報を更新"
+    },
+    "technical_info": {
+      "title": "技術情報"
+    }
+  },
+  "speakers": {
+    "Chelsie": {
+      "name_ja": "チェルシー",
+      "description": "明るい若い女性の声。エネルギッシュで親しみやすい。"
+    },
+    "Ethan": {
+      "name_ja": "イーサン",
+      "description": "穏やかな若い男性の声。落ち着いた雰囲気。"
+    },
+    "Aiden": {
+      "name_ja": "エイデン",
+      "description": "渋みのある男性の声。成熟した安定感。"
+    },
+    "Bella": {
+      "name_ja": "ベラ",
+      "description": "温かみのある女性の声。優しく包み込む雰囲気。"
+    },
+    "Vivian": {
+      "name_ja": "ヴィヴィアン",
+      "description": "エネルギッシュな女性の声。活発で明るい。"
+    },
+    "Lucas": {
+      "name_ja": "ルーカス",
+      "description": "明るい若い男性の声。爽やかで親しみやすい。"
+    },
+    "Eleanor": {
+      "name_ja": "エレノア",
+      "description": "上品な女性の声。落ち着いた知的な雰囲気。"
+    },
+    "Alexander": {
+      "name_ja": "アレクサンダー",
+      "description": "力強い男性の声。威厳と安定感。"
+    },
+    "Serena": {
+      "name_ja": "セレナ",
+      "description": "癒やしの女性の声。穏やかでリラックス。"
+    }
+  },
+  "languages": {
+    "Japanese": "日本語",
+    "English": "英語",
+    "Chinese": "中国語",
+    "Korean": "韓国語",
+    "French": "フランス語",
+    "German": "ドイツ語",
+    "Spanish": "スペイン語",
+    "Italian": "イタリア語",
+    "Portuguese": "ポルトガル語",
+    "Russian": "ロシア語"
+  },
+  "emotions": {
+    "neutral": "ニュートラル",
+    "happy": "嬉しい",
+    "sad": "悲しい",
+    "angry": "怒り",
+    "surprised": "驚き",
+    "fearful": "恐怖",
+    "disgusted": "嫌悪",
+    "calm": "穏やか",
+    "excited": "興奮",
+    "tender": "優しい"
+  },
+  "messages": {
+    "generating": "生成中...",
+    "generated": "生成完了",
+    "error": "エラー",
+    "enter_text": "テキストを入力してください。",
+    "upload_reference": "参照音声をアップロードしてください。",
+    "enter_reference_text": "参照音声のテキストを入力してください。",
+    "enter_voice_description": "ボイスの説明を入力してください。"
+  }
+}

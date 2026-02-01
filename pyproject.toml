@@ -3,44 +3,74 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "qwen-tts"
-version = "0.0.4"
-description = "Qwen-TTS python package"
+name = "qwen-tts-mac-genelab"
+version = "0.1.0"
+description = "Qwen3-TTS Apple Silicon Mac optimized fork with dual-engine and Japanese GUI"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 classifiers = [
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
-  "Programming Language :: Python :: 3.13",
+  "Operating System :: MacOS :: MacOS X",
+  "Topic :: Multimedia :: Sound/Audio :: Speech",
 ]
 license = { text = "Apache-2.0" }
-authors = [{ name = "Alibaba Qwen Team" }]
+authors = [
+  { name = "Alibaba Qwen Team" },
+  { name = "Qwen3-TTS-Mac-JP Contributors" },
+]
 
 dependencies = [
-  "transformers==4.57.3",
-  "accelerate==1.12.0",
-  "gradio",
-  "librosa",
+  "transformers>=4.40.0",
+  "accelerate>=1.0.0",
+  "gradio>=4.0.0",
+  "librosa>=0.10.0",
   "torchaudio",
-  "soundfile",
+  "soundfile>=0.12.0",
   "sox",
   "onnxruntime",
   "einops",
+  "numpy<2",
+  "psutil>=5.9.0",
+]
+
+[project.optional-dependencies]
+mac = [
+  "mlx>=0.10.0",
+  "mlx-lm>=0.10.0",
+  "mlx-audio>=0.3.0",
+]
+dev = [
+  "pytest>=7.0.0",
+  "black>=23.0.0",
+  "ruff>=0.1.0",
 ]
 
 [project.urls]
-Homepage = "https://github.com/Qwen/Qwen3-TTS"
-Repository = "https://github.com/Qwen/Qwen3-TTS"
+Homepage = "https://github.com/hiroki-abe-58/Qwen3-TTS-Mac-GeneLab"
+Repository = "https://github.com/hiroki-abe-58/Qwen3-TTS-Mac-GeneLab"
+Upstream = "https://github.com/QwenLM/Qwen3-TTS"
 
 [project.scripts]
 qwen-tts-demo = "qwen_tts.cli.demo:main"
+qwen-tts-mac = "ui.app:main"
 
 [tool.setuptools]
-packages = { find = { where = ["."] , include = ["qwen_tts*"] } }
+packages = { find = { where = ["."] , include = ["qwen_tts*", "mac*", "ui*"] } }
 include-package-data = true
 
 [tool.setuptools.package-data]
 qwen_tts = ["py.typed", "**/*.npz"]
+ui = ["i18n/*.json"]
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+select = ["E", "F", "W", "I", "UP"]
+ignore = ["E501"]

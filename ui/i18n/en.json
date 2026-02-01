@@ -1,0 +1,195 @@
+{
+  "app": {
+    "title": "Qwen3-TTS-Mac-GeneLab",
+    "subtitle": "Apple Silicon Mac Optimized Text-to-Speech"
+  },
+  "tabs": {
+    "custom_voice": "Custom Voice",
+    "voice_design": "Voice Design",
+    "voice_clone": "Voice Clone",
+    "settings": "Settings"
+  },
+  "custom_voice": {
+    "title": "Custom Voice",
+    "description": "Generate speech using 9 preset speaker voices.",
+    "text_input": {
+      "label": "Text to speak",
+      "placeholder": "Enter the text you want to convert to speech..."
+    },
+    "speaker_selector": {
+      "label": "Speaker Selection",
+      "info": "Choose from 9 preset voices"
+    },
+    "language_selector": {
+      "label": "Language",
+      "info": "Select output language"
+    },
+    "emotion_selector": {
+      "label": "Emotion",
+      "info": "Specify emotion (optional)"
+    },
+    "speed_slider": {
+      "label": "Speed",
+      "info": "0.5 (slow) to 2.0 (fast)"
+    },
+    "generate_button": "Generate Speech",
+    "audio_output": "Generated Audio",
+    "status": "Status"
+  },
+  "voice_design": {
+    "title": "Voice Design",
+    "description": "Describe voice characteristics in text to generate matching speech.",
+    "text_input": {
+      "label": "Text to speak",
+      "placeholder": "Enter the text you want to convert to speech..."
+    },
+    "voice_description": {
+      "label": "Voice Description",
+      "placeholder": "e.g., A calm middle-aged male voice with a warm tone.",
+      "info": "Describe voice characteristics in English (Japanese also works)"
+    },
+    "generate_button": "Generate Speech",
+    "audio_output": "Generated Audio",
+    "status": "Status"
+  },
+  "voice_clone": {
+    "title": "Voice Clone",
+    "description": "Clone a voice from just 3 seconds of reference audio.",
+    "reference_audio": {
+      "label": "Reference Audio (3-30 seconds recommended)"
+    },
+    "reference_language": {
+      "label": "Reference Audio Language"
+    },
+    "transcribe_button": "Transcribe with Whisper",
+    "reference_text": {
+      "label": "Reference Audio Text",
+      "placeholder": "Enter the content spoken in the reference audio, or auto-transcribe above...",
+      "info": "Accurate text input enables higher quality cloning"
+    },
+    "text_input": {
+      "label": "Text to speak",
+      "placeholder": "Enter the text you want the cloned voice to speak..."
+    },
+    "output_language": {
+      "label": "Output Language",
+      "info": "Language of generated speech"
+    },
+    "generate_button": "Generate Speech",
+    "audio_output": "Generated Audio",
+    "status": "Status",
+    "tips": {
+      "title": "Tips",
+      "items": [
+        "Reference audio of **3-30 seconds** works best",
+        "Use audio recorded in a **quiet environment**",
+        "Enter reference text **accurately**",
+        "Multi-language: Japanese voice can speak English"
+      ]
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "engine": {
+      "title": "Engine Settings",
+      "selector": {
+        "label": "Preferred Engine",
+        "info": "AUTO: Auto-select by task. MLX: Fast & memory efficient. MPS: For Voice Clone.",
+        "options": {
+          "auto": "AUTO (Recommended)",
+          "mlx": "MLX (Apple Silicon Optimized)",
+          "pytorch_mps": "PyTorch MPS"
+        }
+      },
+      "status_button": "Refresh Engine Status",
+      "change_button": "Change Engine"
+    },
+    "memory": {
+      "title": "Memory Management",
+      "usage_label": "Memory Usage",
+      "refresh_button": "Refresh",
+      "unload_button": "Unload All Models",
+      "estimates": {
+        "title": "Memory Usage Estimates"
+      }
+    },
+    "system_info": {
+      "title": "System Information",
+      "refresh_button": "Refresh System Info"
+    },
+    "technical_info": {
+      "title": "Technical Information"
+    }
+  },
+  "speakers": {
+    "Chelsie": {
+      "name_ja": "Chelsie",
+      "description": "Bright young female voice. Energetic and friendly."
+    },
+    "Ethan": {
+      "name_ja": "Ethan",
+      "description": "Calm young male voice. Relaxed atmosphere."
+    },
+    "Aiden": {
+      "name_ja": "Aiden",
+      "description": "Mature male voice. Stable and seasoned."
+    },
+    "Bella": {
+      "name_ja": "Bella",
+      "description": "Warm female voice. Gentle and embracing."
+    },
+    "Vivian": {
+      "name_ja": "Vivian",
+      "description": "Energetic female voice. Lively and bright."
+    },
+    "Lucas": {
+      "name_ja": "Lucas",
+      "description": "Bright young male voice. Fresh and friendly."
+    },
+    "Eleanor": {
+      "name_ja": "Eleanor",
+      "description": "Elegant female voice. Calm and intellectual."
+    },
+    "Alexander": {
+      "name_ja": "Alexander",
+      "description": "Powerful male voice. Dignified and stable."
+    },
+    "Serena": {
+      "name_ja": "Serena",
+      "description": "Soothing female voice. Calm and relaxing."
+    }
+  },
+  "languages": {
+    "Japanese": "Japanese",
+    "English": "English",
+    "Chinese": "Chinese",
+    "Korean": "Korean",
+    "French": "French",
+    "German": "German",
+    "Spanish": "Spanish",
+    "Italian": "Italian",
+    "Portuguese": "Portuguese",
+    "Russian": "Russian"
+  },
+  "emotions": {
+    "neutral": "Neutral",
+    "happy": "Happy",
+    "sad": "Sad",
+    "angry": "Angry",
+    "surprised": "Surprised",
+    "fearful": "Fearful",
+    "disgusted": "Disgusted",
+    "calm": "Calm",
+    "excited": "Excited",
+    "tender": "Tender"
+  },
+  "messages": {
+    "generating": "Generating...",
+    "generated": "Generation complete",
+    "error": "Error",
+    "enter_text": "Please enter text.",
+    "upload_reference": "Please upload reference audio.",
+    "enter_reference_text": "Please enter reference audio text.",
+    "enter_voice_description": "Please enter voice description."
+  }
+}

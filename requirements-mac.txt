@@ -1,0 +1,56 @@
+# Qwen3-TTS-Mac-JP Mac固有の依存関係
+# Python 3.11 (Miniforge arm64) 推奨
+
+# ======================
+# Core Dependencies
+# ======================
+torch>=2.0.0
+torchvision
+torchaudio
+
+# ======================
+# MLX (Apple Silicon Native)
+# ======================
+mlx>=0.10.0
+mlx-lm>=0.10.0
+mlx-audio>=0.3.0
+
+# ======================
+# Transformers & NLP
+# ======================
+transformers>=4.40.0
+accelerate>=1.0.0
+tokenizers
+
+# ======================
+# Audio Processing
+# ======================
+librosa>=0.10.0
+soundfile>=0.12.0
+sox
+audioread
+
+# ======================
+# Web UI
+# ======================
+gradio>=4.0.0
+
+# ======================
+# Utilities
+# ======================
+psutil>=5.9.0
+numpy<2
+einops
+onnxruntime
+
+# ======================
+# Optional: Whisper (for Voice Clone transcription)
+# ======================
+# openai-whisper  # フォールバック用、mlx-audio の Whisper を優先
+
+# ======================
+# Development (optional)
+# ======================
+# pytest
+# black
+# ruff
