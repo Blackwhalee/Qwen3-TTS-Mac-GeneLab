@@ -23,53 +23,45 @@ import gradio as gr
 
 from ui.i18n_utils import UI_LANGUAGES, load_i18n, t
 
-# Gradio フロントエンド用アップロードエリア翻訳
-# Gradio 6.x の upload_text キー (drop_audio / click_to_upload) と common.or を JS で上書き
-_UPLOAD_TEXTS: dict[str, dict[str, str]] = {
-    "ja": {"drop": "音声をここにドロップ", "or": "または", "click": "クリックしてアップロード"},
-    "en": {"drop": "Drop Audio Here",     "or": "or",       "click": "Click to Upload"},
-    "zh": {"drop": "将音频拖放到此处",     "or": "或",       "click": "点击上传"},
-    "ko": {"drop": "여기에 오디오 드롭",    "or": "또는",     "click": "클릭하여 업로드"},
-    "ru": {"drop": "Перетащите аудио сюда", "or": "или",     "click": "Нажмите для загрузки"},
-    "es": {"drop": "Arrastra el audio aqui","or": "o",        "click": "Haz clic para subir"},
-    "it": {"drop": "Trascina l'audio qui",  "or": "o",        "click": "Clicca per caricare"},
-    "de": {"drop": "Audio hierher ziehen",  "or": "oder",     "click": "Klicken zum Hochladen"},
-    "fr": {"drop": "Deposez l'audio ici",   "or": "ou",       "click": "Cliquez pour telecharger"},
-    "pt": {"drop": "Arraste o audio aqui",  "or": "ou",       "click": "Clique para enviar"},
+# ページ全体に常駐する JS: アップロードエリアのテキストを英語に固定する。
+# gr.HTML 内の <script> は Gradio がストリップするため、
+# gr.Blocks(js=...) で注入してページ読込時に1度だけ評価させる。
+_UPLOAD_FIX_JS = """
+() => {
+  /* ---- 非英語パターン検出用正規表現 ---- */
+  var RE_DROP  = /ドロップ|拖放|드롭|Перетащите|Arrastra|Trascina|ziehen|[Dd][eé]posez|Arraste/;
+  var RE_CLICK = /アップロード|上传|업로드|загруз|[Ss]ubir|[Cc]aricare|Hochladen|[Tt][eé]l[eé]charger|[Ee]nviar/;
+  var RE_OR    = /^[\\s\\-\\u2013\\u2014]*(または|或|또는|или|oder|ou)([\\s\\-\\u2013\\u2014]*$)/;
+
+  function fix() {
+    document.querySelectorAll('span').forEach(function(s) {
+      var t = s.textContent;
+      if (!t || t.length > 120 || t.length < 1) return;
+
+      var hasDrop  = RE_DROP.test(t);
+      var hasClick = RE_CLICK.test(t);
+
+      if (hasDrop && hasClick) {
+        s.textContent = 'Drop Audio Here - or - Click to Upload';
+      } else if (hasDrop) {
+        s.textContent = 'Drop Audio Here';
+      } else if (hasClick) {
+        s.textContent = 'Click to Upload';
+      } else if (RE_OR.test(t.trim())) {
+        s.textContent = '- or -';
+      }
+    });
+  }
+
+  /* MutationObserver: @gr.render による再描画にも追従 (切断しない) */
+  new MutationObserver(function() { requestAnimationFrame(fix); })
+    .observe(document.body, {childList: true, subtree: true});
+
+  /* 初回実行 + 定期フォールバック */
+  setTimeout(fix, 300);
+  setInterval(fix, 3000);
 }
-
-
-def _upload_text_js(lang: str) -> str:
-    """Gradio アップロードエリアの文言を動的に置換する JS を生成する。"""
-    ut = _UPLOAD_TEXTS.get(lang, _UPLOAD_TEXTS["en"])
-    drop = ut["drop"].replace("'", "\\'")
-    sep = ut["or"].replace("'", "\\'")
-    click = ut["click"].replace("'", "\\'")
-
-    # Gradio 6.x の全言語のドロップ/クリック文言パターン（検出用）
-    return f"""<div style="display:none" id="_utx"></div>
-<script>
-(function(){{
-  var D='{drop}',O='{sep}',C='{click}';
-  var dropRe=/ドロップ|Drop|拖放|드롭|Перетащите|Arrastra|Trascina|ziehen|[Dd][eé]posez|Arraste/;
-  var clickRe=/アップロード|Upload|上传|업로드|загруз|subir|caricare|Hochladen|[Tt][eé]l[eé]charger|enviar/;
-  var orRe=/^[\\s\\-]*(または|or|或|또는|или|o|oder|ou)[\\s\\-]*$/i;
-  function go(){{
-    document.querySelectorAll('span').forEach(function(s){{
-      var t=s.textContent;
-      if(!t||t.length>80)return;
-      if(dropRe.test(t)&&clickRe.test(t)){{s.textContent=D+' - '+O+' - '+C;}}
-      else if(dropRe.test(t)&&!clickRe.test(t)){{s.textContent=D;}}
-      else if(clickRe.test(t)&&!dropRe.test(t)){{s.textContent=C;}}
-      else if(orRe.test(t)){{s.textContent='- '+O+' -';}}
-    }});
-  }}
-  [200,600,1200].forEach(function(d){{setTimeout(go,d);}});
-  var ob=new MutationObserver(function(){{setTimeout(go,80);}});
-  ob.observe(document.body,{{childList:true,subtree:true}});
-  setTimeout(function(){{ob.disconnect();}},12000);
-}})();
-</script>"""
+"""
 
 # ロギング設定
 logging.basicConfig(
@@ -290,9 +282,6 @@ def create_app(default_lang: str = "ja") -> gr.Blocks:
         def render_content(selected_lang: str) -> None:
             load_i18n(selected_lang)
 
-            # アップロードエリア文言を選択言語に合わせて差し替え
-            gr.HTML(_upload_text_js(selected_lang), visible=False)
-
             create_header()
 
             with gr.Tabs():
@@ -343,6 +332,7 @@ def main() -> None:
         share=args.share,
         show_error=True,
         css=CUSTOM_CSS,
+        js=_UPLOAD_FIX_JS,
         theme=gr.themes.Soft(
             primary_hue="blue",
             secondary_hue="slate",
