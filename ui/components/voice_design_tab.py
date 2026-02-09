@@ -5,7 +5,6 @@
 ボイスデザインタブ
 
 テキスト記述でボイスの特徴を指定し、音声を生成する。
-例: 「落ち着いた中年男性の声」「元気な若い女性の声」
 """
 
 from __future__ import annotations
@@ -17,24 +16,30 @@ from typing import Any
 
 import gradio as gr
 
+from ui.i18n_utils import t
+
 logger = logging.getLogger(__name__)
 
-# 言語選択
-LANGUAGE_CHOICES = [
+# TTS エンジン用言語キー
+LANGUAGE_KEYS = [
     "Japanese", "English", "Chinese", "Korean",
     "French", "German", "Spanish", "Italian",
     "Portuguese", "Russian",
 ]
 
-# ボイスデザインのサンプル
+# ボイスデザインのサンプル（説明は英語固定 = エンジン入力）
 VOICE_DESIGN_SAMPLES = [
-    ("落ち着いた中年男性", "A calm and composed middle-aged male voice with a warm, reassuring tone."),
-    ("元気な若い女性", "An energetic young female voice, cheerful and lively with a bright tone."),
-    ("知的なナレーター", "A professional narrator voice, clear and articulate, suitable for documentaries."),
-    ("優しいおばあちゃん", "A gentle elderly female voice, warm and comforting like a grandmother."),
-    ("力強いアナウンサー", "A powerful male announcer voice, confident and authoritative."),
-    ("かわいい少女", "A cute young girl voice, sweet and innocent with a playful tone."),
+    ("Calm middle-aged male", "A calm and composed middle-aged male voice with a warm, reassuring tone."),
+    ("Energetic young female", "An energetic young female voice, cheerful and lively with a bright tone."),
+    ("Professional narrator", "A professional narrator voice, clear and articulate, suitable for documentaries."),
+    ("Gentle grandmother", "A gentle elderly female voice, warm and comforting like a grandmother."),
+    ("Powerful announcer", "A powerful male announcer voice, confident and authoritative."),
+    ("Cute young girl", "A cute young girl voice, sweet and innocent with a playful tone."),
 ]
+
+
+def _language_choices() -> list[tuple[str, str]]:
+    return [(t(f"languages.{k}", k), k) for k in LANGUAGE_KEYS]
 
 
 def generate_audio_with_design(
@@ -43,22 +48,12 @@ def generate_audio_with_design(
     language: str,
     speed: float,
 ) -> tuple[Any, str]:
-    """ボイスデザインで音声を生成する。
-
-    Args:
-        text: 読み上げテキスト
-        voice_description: ボイスの説明
-        language: 言語
-        speed: 速度
-
-    Returns:
-        tuple: (音声ファイルパス, ステータスメッセージ)
-    """
+    """ボイスデザインで音声を生成する。"""
     if not text.strip():
-        return None, "テキストを入力してください。"
+        return None, t("messages.enter_text")
 
     if not voice_description.strip():
-        return None, "ボイスの説明を入力してください。"
+        return None, t("messages.enter_voice_description")
 
     try:
         from mac.engine import DualEngine, TaskType
@@ -66,10 +61,7 @@ def generate_audio_with_design(
         logger.info(f"ボイスデザイン生成開始: description={voice_description[:50]}...")
         start_time = time.time()
 
-        # エンジン取得
         engine = DualEngine()
-
-        # 生成
         result = engine.generate(
             text=text,
             task_type=TaskType.VOICE_DESIGN,
@@ -78,7 +70,6 @@ def generate_audio_with_design(
             speed=speed,
         )
 
-        # 一時ファイルに保存
         with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as f:
             import soundfile as sf
             sf.write(f.name, result.audio, result.sample_rate)
@@ -86,122 +77,94 @@ def generate_audio_with_design(
 
         elapsed = time.time() - start_time
         status = (
-            f"生成完了: {result.duration_seconds:.2f}秒の音声 | "
-            f"処理時間: {elapsed:.2f}秒 | "
-            f"エンジン: {result.engine_used.value}"
+            f"{t('messages.generated')}: {result.duration_seconds:.2f}s | "
+            f"{elapsed:.2f}s | {result.engine_used.value}"
         )
-
         logger.info(status)
         return audio_path, status
 
     except Exception as e:
         logger.error(f"ボイスデザイン生成エラー: {e}")
-        return None, f"エラー: {str(e)}"
+        return None, f"{t('messages.error')}: {str(e)}"
 
 
 def create_voice_design_tab() -> None:
     """ボイスデザインタブを作成する。"""
-    gr.Markdown(
-        """
-        ### ボイスデザイン
-        
-        テキストでボイスの特徴を説明すると、その特徴に合った声で音声を生成します。
-        英語で記述するとより正確に特徴が反映されます。
-        """
-    )
+    gr.Markdown(f"### {t('voice_design.title')}\n\n{t('voice_design.description')}")
 
     with gr.Row():
         with gr.Column(scale=2):
-            # テキスト入力
             text_input = gr.Textbox(
-                label="読み上げテキスト",
-                placeholder="ここに読み上げたいテキストを入力してください...",
+                label=t("voice_design.text_input.label"),
+                placeholder=t("voice_design.text_input.placeholder"),
                 lines=5,
                 max_lines=10,
             )
 
-            # ボイス説明
             voice_description = gr.Textbox(
-                label="ボイスの説明",
-                placeholder="例: A calm middle-aged male voice with a warm tone.",
+                label=t("voice_design.voice_description.label"),
+                placeholder=t("voice_design.voice_description.placeholder"),
                 lines=3,
-                info="声の特徴を英語で記述してください（日本語でも可）",
+                info=t("voice_design.voice_description.info"),
             )
 
             with gr.Row():
-                # 言語選択
                 language_selector = gr.Dropdown(
-                    choices=LANGUAGE_CHOICES,
+                    choices=_language_choices(),
                     value="Japanese",
-                    label="言語",
-                    info="出力音声の言語を選択",
+                    label=t("custom_voice.language_selector.label"),
+                    info=t("custom_voice.language_selector.info"),
                 )
 
-                # 速度調整
                 speed_slider = gr.Slider(
                     minimum=0.5,
                     maximum=2.0,
                     value=1.0,
                     step=0.1,
-                    label="速度",
-                    info="0.5（遅い）〜 2.0（速い）",
+                    label=t("custom_voice.speed_slider.label"),
+                    info=t("custom_voice.speed_slider.info"),
                 )
 
-            # 生成ボタン
             generate_btn = gr.Button(
-                "音声を生成",
+                t("voice_design.generate_button"),
                 variant="primary",
                 elem_classes=["primary-btn"],
             )
 
         with gr.Column(scale=1):
-            # 出力
             audio_output = gr.Audio(
-                label="生成された音声",
+                label=t("voice_design.audio_output"),
                 type="filepath",
                 interactive=False,
             )
 
-            # ステータス
             status_output = gr.Textbox(
-                label="ステータス",
+                label=t("voice_design.status"),
                 interactive=False,
                 lines=2,
             )
 
     # サンプル
-    gr.Markdown("### ボイスデザインのサンプル")
+    gr.Markdown(f"### {t('voice_design.samples_title')}")
     with gr.Row():
-        for name_ja, desc_en in VOICE_DESIGN_SAMPLES[:3]:
+        for label, desc_en in VOICE_DESIGN_SAMPLES[:3]:
             with gr.Column():
-                gr.Markdown(f"**{name_ja}**")
-                sample_btn = gr.Button(f"使用する", size="sm")
+                gr.Markdown(f"**{label}**")
+                sample_btn = gr.Button(t("voice_design.use_button"), size="sm")
 
-                # クロージャで値をキャプチャ
                 def make_handler(d: str):
                     return lambda: d
                 sample_btn.click(fn=make_handler(desc_en), outputs=[voice_description])
 
     with gr.Row():
-        for name_ja, desc_en in VOICE_DESIGN_SAMPLES[3:]:
+        for label, desc_en in VOICE_DESIGN_SAMPLES[3:]:
             with gr.Column():
-                gr.Markdown(f"**{name_ja}**")
-                sample_btn = gr.Button(f"使用する", size="sm")
+                gr.Markdown(f"**{label}**")
+                sample_btn = gr.Button(t("voice_design.use_button"), size="sm")
 
                 def make_handler(d: str):
                     return lambda: d
                 sample_btn.click(fn=make_handler(desc_en), outputs=[voice_description])
-
-    # サンプルテキスト
-    gr.Examples(
-        examples=[
-            ["こんにちは、今日はいい天気ですね。", "A warm and friendly female voice."],
-            ["本日の天気予報をお伝えします。", "A professional male announcer voice."],
-            ["むかしむかし、あるところに...", "A gentle storyteller voice, perfect for bedtime stories."],
-        ],
-        inputs=[text_input, voice_description],
-        label="サンプル組み合わせ",
-    )
 
     # イベントハンドラ
     generate_btn.click(

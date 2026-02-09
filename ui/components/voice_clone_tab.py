@@ -18,31 +18,28 @@ from typing import Any
 import gradio as gr
 import numpy as np
 
+from ui.i18n_utils import t
+
 logger = logging.getLogger(__name__)
 
-# 言語選択
-LANGUAGE_CHOICES = [
+# TTS エンジン用言語キー
+LANGUAGE_KEYS = [
     "Japanese", "English", "Chinese", "Korean",
     "French", "German", "Spanish", "Italian",
     "Portuguese", "Russian",
 ]
 
 
+def _language_choices() -> list[tuple[str, str]]:
+    return [(t(f"languages.{k}", k), k) for k in LANGUAGE_KEYS]
+
+
 def transcribe_audio(audio_path: str, language: str) -> str:
-    """音声を書き起こす。
-
-    Args:
-        audio_path: 音声ファイルパス
-        language: 言語
-
-    Returns:
-        書き起こしテキスト
-    """
+    """音声を書き起こす。"""
     if not audio_path:
         return ""
 
     try:
-        # Whisper transcriber を使用
         from mac.whisper_transcriber import WhisperTranscriber
 
         transcriber = WhisperTranscriber()
@@ -51,11 +48,11 @@ def transcribe_audio(audio_path: str, language: str) -> str:
         return result
 
     except ImportError:
-        logger.warning("WhisperTranscriber が利用できません。手動入力が必要です。")
-        return "[Whisper が利用できません。手動で入力してください]"
+        logger.warning("WhisperTranscriber が利用できません。")
+        return "[Whisper unavailable]"
     except Exception as e:
         logger.error(f"書き起こしエラー: {e}")
-        return f"[書き起こしエラー: {str(e)}]"
+        return f"[Error: {str(e)}]"
 
 
 def generate_cloned_audio(
@@ -65,26 +62,15 @@ def generate_cloned_audio(
     language: str,
     speed: float,
 ) -> tuple[Any, str]:
-    """ボイスクローンで音声を生成する。
-
-    Args:
-        text: 読み上げテキスト
-        reference_audio: 参照音声パス
-        reference_text: 参照音声のテキスト
-        language: 言語
-        speed: 速度
-
-    Returns:
-        tuple: (音声ファイルパス, ステータスメッセージ)
-    """
+    """ボイスクローンで音声を生成する。"""
     if not text.strip():
-        return None, "読み上げテキストを入力してください。"
+        return None, t("messages.enter_text")
 
     if not reference_audio:
-        return None, "参照音声をアップロードしてください。"
+        return None, t("messages.upload_reference")
 
     if not reference_text.strip():
-        return None, "参照音声のテキストを入力してください（Whisper で自動書き起こし可能）。"
+        return None, t("messages.enter_reference_text")
 
     try:
         from mac.engine import DualEngine, TaskType
@@ -93,14 +79,10 @@ def generate_cloned_audio(
         logger.info("ボイスクローン生成開始...")
         start_time = time.time()
 
-        # 参照音声を読み込み
         ref_audio, ref_sr = librosa.load(reference_audio, sr=None)
         logger.info(f"参照音声: {len(ref_audio)/ref_sr:.2f}秒, {ref_sr}Hz")
 
-        # エンジン取得
         engine = DualEngine()
-
-        # 生成
         result = engine.generate(
             text=text,
             task_type=TaskType.VOICE_CLONE,
@@ -111,7 +93,6 @@ def generate_cloned_audio(
             speed=speed,
         )
 
-        # 一時ファイルに保存
         with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as f:
             import soundfile as sf
             sf.write(f.name, result.audio, result.sample_rate)
@@ -119,135 +100,113 @@ def generate_cloned_audio(
 
         elapsed = time.time() - start_time
         status = (
-            f"生成完了: {result.duration_seconds:.2f}秒の音声 | "
-            f"処理時間: {elapsed:.2f}秒 | "
-            f"エンジン: {result.engine_used.value}"
+            f"{t('messages.generated')}: {result.duration_seconds:.2f}s | "
+            f"{elapsed:.2f}s | {result.engine_used.value}"
         )
-
         logger.info(status)
         return audio_path, status
 
     except Exception as e:
         logger.error(f"ボイスクローン生成エラー: {e}")
-        return None, f"エラー: {str(e)}"
+        return None, f"{t('messages.error')}: {str(e)}"
 
 
 def create_voice_clone_tab() -> None:
     """ボイスクローンタブを作成する。"""
     gr.Markdown(
-        """
-        ### ボイスクローン
-        
-        わずか3秒の参照音声から、その声で新しいテキストを読み上げます。
-        参照音声は明瞭で、背景ノイズが少ないものを使用してください。
-        
-        > **注意**: Voice Clone は PyTorch MPS エンジンで float32 を使用します（MLX より多くのメモリが必要）。
-        """
+        f"### {t('voice_clone.title')}\n\n"
+        f"{t('voice_clone.description')}\n\n"
+        f"> {t('voice_clone.notice')}"
     )
 
     with gr.Row():
         with gr.Column(scale=2):
-            # 参照音声
             reference_audio = gr.Audio(
-                label="参照音声（3〜30秒推奨）",
+                label=t("voice_clone.reference_audio.label"),
                 type="filepath",
                 sources=["upload", "microphone"],
             )
 
-            # 書き起こしボタンと言語選択
             with gr.Row():
                 transcribe_language = gr.Dropdown(
-                    choices=LANGUAGE_CHOICES,
+                    choices=_language_choices(),
                     value="Japanese",
-                    label="参照音声の言語",
+                    label=t("voice_clone.reference_language.label"),
                     scale=2,
                 )
                 transcribe_btn = gr.Button(
-                    "Whisper で書き起こし",
+                    t("voice_clone.transcribe_button"),
                     variant="secondary",
                     scale=1,
                 )
 
-            # 参照音声のテキスト
             reference_text = gr.Textbox(
-                label="参照音声のテキスト",
-                placeholder="参照音声で話されている内容を入力、または上のボタンで自動書き起こし...",
+                label=t("voice_clone.reference_text.label"),
+                placeholder=t("voice_clone.reference_text.placeholder"),
                 lines=3,
-                info="正確なテキストを入力すると、より高品質なクローンが可能です",
+                info=t("voice_clone.reference_text.info"),
             )
 
             gr.Markdown("---")
 
-            # 生成テキスト
             text_input = gr.Textbox(
-                label="読み上げテキスト",
-                placeholder="クローンした声で読み上げたいテキストを入力してください...",
+                label=t("voice_clone.text_input.label"),
+                placeholder=t("voice_clone.text_input.placeholder"),
                 lines=5,
                 max_lines=10,
             )
 
             with gr.Row():
-                # 出力言語選択
                 output_language = gr.Dropdown(
-                    choices=LANGUAGE_CHOICES,
+                    choices=_language_choices(),
                     value="Japanese",
-                    label="出力言語",
-                    info="生成音声の言語",
+                    label=t("voice_clone.output_language.label"),
+                    info=t("voice_clone.output_language.info"),
                 )
 
-                # 速度調整
                 speed_slider = gr.Slider(
                     minimum=0.5,
                     maximum=2.0,
                     value=1.0,
                     step=0.1,
-                    label="速度",
-                    info="0.5（遅い）〜 2.0（速い）",
+                    label=t("custom_voice.speed_slider.label"),
+                    info=t("custom_voice.speed_slider.info"),
                 )
 
-            # 生成ボタン
             generate_btn = gr.Button(
-                "音声を生成",
+                t("voice_clone.generate_button"),
                 variant="primary",
                 elem_classes=["primary-btn"],
             )
 
         with gr.Column(scale=1):
-            # 出力
             audio_output = gr.Audio(
-                label="生成された音声",
+                label=t("voice_clone.audio_output"),
                 type="filepath",
                 interactive=False,
             )
 
-            # ステータス
             status_output = gr.Textbox(
-                label="ステータス",
+                label=t("voice_clone.status"),
                 interactive=False,
                 lines=2,
             )
 
-            # ヒント
-            gr.Markdown(
-                """
-                #### ヒント
-                
-                - 参照音声は **3〜30秒** が最適
-                - **静かな環境** で録音された音声を使用
-                - 参照音声のテキストは **正確に** 入力
-                - 多言語対応: 日本語の声で英語を話すことも可能
-                """
-            )
+            tips_items = "\n".join(f"- {item}" for item in (
+                t("voice_clone.tips.items.0", ""),
+                t("voice_clone.tips.items.1", ""),
+                t("voice_clone.tips.items.2", ""),
+                t("voice_clone.tips.items.3", ""),
+            ))
+            gr.Markdown(f"#### {t('voice_clone.tips.title')}\n\n{tips_items}")
 
-    # サンプルテキスト
     gr.Examples(
         examples=[
-            ["こんにちは、音声クローン技術のデモンストレーションです。"],
-            ["本日は晴天なり。マイクテスト、マイクテスト。"],
             ["Hello, this is a voice cloning demonstration."],
+            ["The weather today is sunny and warm."],
         ],
         inputs=[text_input],
-        label="サンプルテキスト",
+        label=t("voice_clone.sample_texts"),
     )
 
     # イベントハンドラ

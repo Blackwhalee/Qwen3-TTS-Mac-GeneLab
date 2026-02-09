@@ -1,0 +1,208 @@
+{
+  "app": {
+    "title": "Qwen3-TTS-Mac-GeneLab",
+    "subtitle": "Apple Silicon Mac에 최적화된 음성 합성"
+  },
+  "tabs": {
+    "custom_voice": "커스텀 보이스",
+    "voice_design": "보이스 디자인",
+    "voice_clone": "보이스 클론",
+    "settings": "설정"
+  },
+  "custom_voice": {
+    "title": "커스텀 보이스",
+    "description": "9종의 프리셋 스피커를 선택하여 음성을 생성합니다.",
+    "text_input": {
+      "label": "읽어줄 텍스트",
+      "placeholder": "음성으로 변환할 텍스트를 입력하세요..."
+    },
+    "speaker_selector": {
+      "label": "스피커 선택",
+      "info": "9종의 프리셋 보이스에서 선택하세요"
+    },
+    "language_selector": {
+      "label": "언어",
+      "info": "출력 음성의 언어를 선택"
+    },
+    "emotion_selector": {
+      "label": "감정",
+      "info": "감정 지정 (선택사항)"
+    },
+    "speed_slider": {
+      "label": "속도",
+      "info": "0.5 (느림) ~ 2.0 (빠름)"
+    },
+    "generate_button": "음성 생성",
+    "audio_output": "생성된 음성",
+    "status": "상태",
+    "sample_texts": "샘플 텍스트"
+  },
+  "voice_design": {
+    "title": "보이스 디자인",
+    "description": "텍스트로 목소리 특성을 설명하면 그에 맞는 음성을 생성합니다. 영어 설명이 더 정확합니다.",
+    "text_input": {
+      "label": "읽어줄 텍스트",
+      "placeholder": "음성으로 변환할 텍스트를 입력하세요..."
+    },
+    "voice_description": {
+      "label": "보이스 설명",
+      "placeholder": "예: A calm middle-aged male voice with a warm tone.",
+      "info": "영어로 음성 특성을 설명하세요 (한국어도 가능)"
+    },
+    "generate_button": "음성 생성",
+    "audio_output": "생성된 음성",
+    "status": "상태",
+    "samples_title": "보이스 디자인 샘플",
+    "use_button": "사용"
+  },
+  "voice_clone": {
+    "title": "보이스 클론",
+    "description": "단 3초의 참조 음성으로 새로운 텍스트를 읽어줍니다. 깨끗하고 노이즈가 적은 음성을 사용하세요.",
+    "notice": "**주의**: 보이스 클론은 PyTorch CPU 엔진에서 float32를 사용합니다 (MLX보다 더 많은 메모리 필요).",
+    "reference_audio": {
+      "label": "참조 음성 (3~30초 권장)"
+    },
+    "reference_language": {
+      "label": "참조 음성 언어"
+    },
+    "transcribe_button": "Whisper로 받아쓰기",
+    "reference_text": {
+      "label": "참조 음성 텍스트",
+      "placeholder": "참조 음성의 내용을 입력하거나 위 버튼으로 자동 받아쓰기...",
+      "info": "정확한 텍스트를 입력하면 더 높은 품질의 클론이 가능합니다"
+    },
+    "text_input": {
+      "label": "읽어줄 텍스트",
+      "placeholder": "클론한 목소리로 읽어줄 텍스트를 입력하세요..."
+    },
+    "output_language": {
+      "label": "출력 언어",
+      "info": "생성 음성의 언어"
+    },
+    "generate_button": "음성 생성",
+    "audio_output": "생성된 음성",
+    "status": "상태",
+    "tips": {
+      "title": "팁",
+      "items": [
+        "참조 음성은 **3~30초**가 최적",
+        "**조용한 환경**에서 녹음된 음성 사용",
+        "참조 음성 텍스트를 **정확하게** 입력",
+        "다국어 지원: 일본어 목소리로 영어도 가능"
+      ]
+    },
+    "sample_texts": "샘플 텍스트"
+  },
+  "settings": {
+    "title": "설정",
+    "engine": {
+      "title": "엔진 설정",
+      "selector": {
+        "label": "우선 엔진",
+        "info": "AUTO: 작업에 따라 자동 선택. MLX: 고속/저메모리. MPS: 보이스 클론용.",
+        "options": {
+          "auto": "AUTO (권장)",
+          "mlx": "MLX (Apple Silicon 최적화)",
+          "pytorch_mps": "PyTorch MPS"
+        }
+      },
+      "status_button": "엔진 상태 새로고침",
+      "change_button": "엔진 변경",
+      "result": "결과"
+    },
+    "memory": {
+      "title": "메모리 관리",
+      "usage_label": "메모리 사용량",
+      "refresh_button": "새로고침",
+      "unload_button": "모든 모델 언로드",
+      "model_management": "모델 관리",
+      "estimates": {
+        "title": "메모리 사용량 가이드",
+        "note": "MLX 양자화 모델을 사용하면 메모리를 크게 절약할 수 있습니다."
+      }
+    },
+    "system_info": {
+      "title": "시스템 정보",
+      "refresh_button": "시스템 정보 새로고침",
+      "chip": "칩",
+      "memory": "메모리",
+      "mps_available": "사용 가능",
+      "mps_unavailable": "사용 불가",
+      "unknown": "알 수 없음"
+    },
+    "technical_info": {
+      "title": "기술 정보"
+    }
+  },
+  "speakers": {
+    "Chelsie": {
+      "local_name": "첼시",
+      "description": "밝은 젊은 여성 목소리. 활기차고 친근함."
+    },
+    "Ethan": {
+      "local_name": "이든",
+      "description": "차분한 젊은 남성 목소리. 편안한 분위기."
+    },
+    "Aiden": {
+      "local_name": "에이든",
+      "description": "성숙한 남성 목소리. 안정적이고 깊이 있음."
+    },
+    "Bella": {
+      "local_name": "벨라",
+      "description": "따뜻한 여성 목소리. 부드럽고 포용적."
+    },
+    "Vivian": {
+      "local_name": "비비안",
+      "description": "활기찬 여성 목소리. 활발하고 밝음."
+    },
+    "Lucas": {
+      "local_name": "루카스",
+      "description": "밝은 젊은 남성 목소리. 상쾌하고 친근함."
+    },
+    "Eleanor": {
+      "local_name": "엘리너",
+      "description": "우아한 여성 목소리. 차분하고 지적."
+    },
+    "Alexander": {
+      "local_name": "알렉산더",
+      "description": "힘있는 남성 목소리. 위엄과 안정감."
+    },
+    "Serena": {
+      "local_name": "세레나",
+      "description": "치유의 여성 목소리. 부드럽고 편안함."
+    }
+  },
+  "languages": {
+    "Japanese": "일본어",
+    "English": "영어",
+    "Chinese": "중국어",
+    "Korean": "한국어",
+    "French": "프랑스어",
+    "German": "독일어",
+    "Spanish": "스페인어",
+    "Italian": "이탈리아어",
+    "Portuguese": "포르투갈어",
+    "Russian": "러시아어"
+  },
+  "emotions": {
+    "neutral": "중립",
+    "happy": "행복",
+    "sad": "슬픔",
+    "angry": "분노",
+    "surprised": "놀람",
+    "fearful": "공포",
+    "disgusted": "혐오",
+    "calm": "차분",
+    "excited": "흥분",
+    "tender": "다정"
+  },
+  "messages": {
+    "generating": "생성 중...",
+    "generated": "생성 완료",
+    "error": "오류",
+    "enter_text": "텍스트를 입력하세요.",
+    "upload_reference": "참조 음성을 업로드하세요.",
+    "enter_reference_text": "참조 음성 텍스트를 입력하세요.",
+    "enter_voice_description": "보이스 설명을 입력하세요."
+  }
+}

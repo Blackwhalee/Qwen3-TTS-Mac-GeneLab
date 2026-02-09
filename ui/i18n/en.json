@@ -34,11 +34,12 @@
     },
     "generate_button": "Generate Speech",
     "audio_output": "Generated Audio",
-    "status": "Status"
+    "status": "Status",
+    "sample_texts": "Sample Texts"
   },
   "voice_design": {
     "title": "Voice Design",
-    "description": "Describe voice characteristics in text to generate matching speech.",
+    "description": "Describe voice characteristics in text to generate matching speech. English descriptions give better results.",
     "text_input": {
       "label": "Text to speak",
       "placeholder": "Enter the text you want to convert to speech..."
@@ -46,15 +47,18 @@
     "voice_description": {
       "label": "Voice Description",
       "placeholder": "e.g., A calm middle-aged male voice with a warm tone.",
-      "info": "Describe voice characteristics in English (Japanese also works)"
+      "info": "Describe voice characteristics in English (other languages also work)"
     },
     "generate_button": "Generate Speech",
     "audio_output": "Generated Audio",
-    "status": "Status"
+    "status": "Status",
+    "samples_title": "Voice Design Samples",
+    "use_button": "Use"
   },
   "voice_clone": {
     "title": "Voice Clone",
-    "description": "Clone a voice from just 3 seconds of reference audio.",
+    "description": "Clone a voice from just 3 seconds of reference audio. Use clear audio with minimal background noise.",
+    "notice": "**Note**: Voice Clone uses PyTorch CPU engine with float32 (requires more memory than MLX).",
     "reference_audio": {
       "label": "Reference Audio (3-30 seconds recommended)"
     },
@@ -86,7 +90,8 @@
         "Enter reference text **accurately**",
         "Multi-language: Japanese voice can speak English"
       ]
-    }
+    },
+    "sample_texts": "Sample Texts"
   },
   "settings": {
     "title": "Settings",
@@ -102,62 +107,43 @@
         }
       },
       "status_button": "Refresh Engine Status",
-      "change_button": "Change Engine"
+      "change_button": "Change Engine",
+      "result": "Result"
     },
     "memory": {
       "title": "Memory Management",
       "usage_label": "Memory Usage",
       "refresh_button": "Refresh",
       "unload_button": "Unload All Models",
+      "model_management": "Model Management",
       "estimates": {
-        "title": "Memory Usage Estimates"
+        "title": "Memory Usage Estimates",
+        "note": "Quantized MLX models significantly save memory."
       }
     },
     "system_info": {
       "title": "System Information",
-      "refresh_button": "Refresh System Info"
+      "refresh_button": "Refresh System Info",
+      "chip": "Chip",
+      "memory": "Memory",
+      "mps_available": "Available",
+      "mps_unavailable": "Unavailable",
+      "unknown": "Unknown"
     },
     "technical_info": {
       "title": "Technical Information"
     }
   },
   "speakers": {
-    "Chelsie": {
-      "name_ja": "Chelsie",
-      "description": "Bright young female voice. Energetic and friendly."
-    },
-    "Ethan": {
-      "name_ja": "Ethan",
-      "description": "Calm young male voice. Relaxed atmosphere."
-    },
-    "Aiden": {
-      "name_ja": "Aiden",
-      "description": "Mature male voice. Stable and seasoned."
-    },
-    "Bella": {
-      "name_ja": "Bella",
-      "description": "Warm female voice. Gentle and embracing."
-    },
-    "Vivian": {
-      "name_ja": "Vivian",
-      "description": "Energetic female voice. Lively and bright."
-    },
-    "Lucas": {
-      "name_ja": "Lucas",
-      "description": "Bright young male voice. Fresh and friendly."
-    },
-    "Eleanor": {
-      "name_ja": "Eleanor",
-      "description": "Elegant female voice. Calm and intellectual."
-    },
-    "Alexander": {
-      "name_ja": "Alexander",
-      "description": "Powerful male voice. Dignified and stable."
-    },
-    "Serena": {
-      "name_ja": "Serena",
-      "description": "Soothing female voice. Calm and relaxing."
-    }
+    "Chelsie": { "local_name": "Chelsie", "description": "Bright young female voice. Energetic and friendly." },
+    "Ethan": { "local_name": "Ethan", "description": "Calm young male voice. Relaxed atmosphere." },
+    "Aiden": { "local_name": "Aiden", "description": "Mature male voice. Stable and seasoned." },
+    "Bella": { "local_name": "Bella", "description": "Warm female voice. Gentle and embracing." },
+    "Vivian": { "local_name": "Vivian", "description": "Energetic female voice. Lively and bright." },
+    "Lucas": { "local_name": "Lucas", "description": "Bright young male voice. Fresh and friendly." },
+    "Eleanor": { "local_name": "Eleanor", "description": "Elegant female voice. Calm and intellectual." },
+    "Alexander": { "local_name": "Alexander", "description": "Powerful male voice. Dignified and stable." },
+    "Serena": { "local_name": "Serena", "description": "Soothing female voice. Calm and relaxing." }
   },
   "languages": {
     "Japanese": "Japanese",

@@ -14,7 +14,6 @@ Qwen3-TTS-Mac-JP Gradio Web UI
 from __future__ import annotations
 
 import argparse
-import json
 import logging
 import sys
 from pathlib import Path
@@ -22,58 +21,14 @@ from typing import Any
 
 import gradio as gr
 
+from ui.i18n_utils import UI_LANGUAGES, load_i18n, t
+
 # ロギング設定
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
 )
 logger = logging.getLogger(__name__)
-
-# i18n ロード
-UI_DIR = Path(__file__).parent
-I18N_DIR = UI_DIR / "i18n"
-
-
-def load_i18n(lang: str = "ja") -> dict[str, Any]:
-    """i18n ファイルをロードする。
-
-    Args:
-        lang: 言語コード (ja, en)
-
-    Returns:
-        翻訳辞書
-    """
-    i18n_file = I18N_DIR / f"{lang}.json"
-    if not i18n_file.exists():
-        logger.warning(f"i18n ファイルが見つかりません: {i18n_file}")
-        return {}
-
-    with open(i18n_file, "r", encoding="utf-8") as f:
-        return json.load(f)
-
-
-# グローバル翻訳辞書
-_i18n: dict[str, Any] = {}
-
-
-def t(key: str, default: str | None = None) -> str:
-    """翻訳キーから文字列を取得する。
-
-    Args:
-        key: ドット区切りのキー (例: "tabs.custom_voice")
-        default: デフォルト値
-
-    Returns:
-        翻訳された文字列
-    """
-    keys = key.split(".")
-    value: Any = _i18n
-    for k in keys:
-        if isinstance(value, dict) and k in value:
-            value = value[k]
-        else:
-            return default if default is not None else key
-    return str(value) if not isinstance(value, dict) else (default or key)
 
 
 # カスタム CSS
@@ -228,13 +183,19 @@ audio {
     width: 0;
     height: 0;
 }
+
+/* 言語セレクター */
+.lang-selector {
+    max-width: 160px;
+    margin-left: auto;
+}
 """
 
 
 def create_header() -> gr.HTML:
     """ヘッダーを作成する。"""
     return gr.HTML(
-        """
+        f"""
         <div class="header-container">
             <h1 class="header-title">
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -242,18 +203,17 @@ def create_header() -> gr.HTML:
                     <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
                     <line x1="12" x2="12" y1="19" y2="22"/>
                 </svg>
-                Qwen3-TTS-Mac-GeneLab
+                {t("app.title")}
             </h1>
-            <p class="header-subtitle">Apple Silicon Mac に最適化された音声合成</p>
+            <p class="header-subtitle">{t("app.subtitle")}</p>
         </div>
         """
     )
 
 
-def create_app() -> gr.Blocks:
+def create_app(default_lang: str = "ja") -> gr.Blocks:
     """Gradio アプリケーションを作成する。"""
-    global _i18n
-    _i18n = load_i18n("ja")
+    load_i18n(default_lang)
 
     # コンポーネントをインポート
     from ui.components.custom_voice_tab import create_custom_voice_tab
@@ -264,32 +224,48 @@ def create_app() -> gr.Blocks:
     with gr.Blocks(
         title="Qwen3-TTS-Mac-GeneLab",
     ) as app:
-        # ヘッダー
-        create_header()
+        # 言語セレクター（最上部）
+        with gr.Row():
+            gr.HTML("<div style='flex:1'></div>")
+            lang_selector = gr.Dropdown(
+                choices=UI_LANGUAGES,
+                value=default_lang,
+                label="",
+                container=False,
+                scale=0,
+                min_width=160,
+                elem_classes=["lang-selector"],
+            )
 
-        # タブ
-        with gr.Tabs() as tabs:
-            with gr.TabItem(t("tabs.custom_voice", "カスタムボイス"), id="custom_voice"):
-                create_custom_voice_tab()
+        # 言語変更時に動的再描画
+        @gr.render(inputs=[lang_selector])
+        def render_content(selected_lang: str) -> None:
+            load_i18n(selected_lang)
 
-            with gr.TabItem(t("tabs.voice_design", "ボイスデザイン"), id="voice_design"):
-                create_voice_design_tab()
+            create_header()
 
-            with gr.TabItem(t("tabs.voice_clone", "ボイスクローン"), id="voice_clone"):
-                create_voice_clone_tab()
+            with gr.Tabs():
+                with gr.TabItem(t("tabs.custom_voice"), id="custom_voice"):
+                    create_custom_voice_tab()
 
-            with gr.TabItem(t("tabs.settings", "設定"), id="settings"):
-                create_settings_tab()
+                with gr.TabItem(t("tabs.voice_design"), id="voice_design"):
+                    create_voice_design_tab()
 
-        # フッター
-        gr.HTML(
-            """
-            <div style="text-align: center; padding: 1rem; color: var(--text-secondary); font-size: 0.85rem;">
-                <p>Powered by <a href="https://github.com/QwenLM/Qwen3-TTS" target="_blank" style="color: var(--primary-color);">Qwen3-TTS</a> | 
-                Fork: <a href="https://github.com/hiroki-abe-58/Qwen3-TTS-Mac-GeneLab" target="_blank" style="color: var(--primary-color);">Qwen3-TTS-Mac-GeneLab</a></p>
-            </div>
-            """
-        )
+                with gr.TabItem(t("tabs.voice_clone"), id="voice_clone"):
+                    create_voice_clone_tab()
+
+                with gr.TabItem(t("tabs.settings"), id="settings"):
+                    create_settings_tab()
+
+            # フッター
+            gr.HTML(
+                """
+                <div style="text-align: center; padding: 1rem; color: var(--text-secondary); font-size: 0.85rem;">
+                    <p>Powered by <a href="https://github.com/QwenLM/Qwen3-TTS" target="_blank" style="color: var(--primary-color);">Qwen3-TTS</a> |
+                    Fork: <a href="https://github.com/hiroki-abe-58/Qwen3-TTS-Mac-GeneLab" target="_blank" style="color: var(--primary-color);">Qwen3-TTS-Mac-GeneLab</a></p>
+                </div>
+                """
+            )
 
     return app
 
@@ -300,18 +276,16 @@ def main() -> None:
     parser.add_argument("--host", type=str, default="0.0.0.0", help="ホストアドレス")
     parser.add_argument("--port", type=int, default=7860, help="ポート番号")
     parser.add_argument("--share", action="store_true", help="Gradio 共有リンクを生成")
-    parser.add_argument("--lang", type=str, default="ja", choices=["ja", "en"], help="UI 言語")
+    parser.add_argument("--lang", type=str, default="ja",
+                        choices=["ja", "en", "zh", "ko", "ru", "es", "it", "de", "fr", "pt"],
+                        help="UI 言語")
 
     args = parser.parse_args()
 
-    # 言語設定
-    global _i18n
-    _i18n = load_i18n(args.lang)
+    logger.info("Qwen3-TTS-Mac-GeneLab Web UI を起動中...")
+    logger.info(f"ホスト: {args.host}, ポート: {args.port}, 言語: {args.lang}")
 
-    logger.info(f"Qwen3-TTS-Mac-GeneLab Web UI を起動中...")
-    logger.info(f"ホスト: {args.host}, ポート: {args.port}")
-
-    app = create_app()
+    app = create_app(default_lang=args.lang)
     app.launch(
         server_name=args.host,
         server_port=args.port,

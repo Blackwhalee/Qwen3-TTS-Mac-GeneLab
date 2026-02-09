@@ -1,0 +1,208 @@
+{
+  "app": {
+    "title": "Qwen3-TTS-Mac-GeneLab",
+    "subtitle": "为 Apple Silicon Mac 优化的语音合成"
+  },
+  "tabs": {
+    "custom_voice": "自定义语音",
+    "voice_design": "语音设计",
+    "voice_clone": "语音克隆",
+    "settings": "设置"
+  },
+  "custom_voice": {
+    "title": "自定义语音",
+    "description": "从9种预设说话人中选择来生成语音。",
+    "text_input": {
+      "label": "朗读文本",
+      "placeholder": "请输入要转换为语音的文本..."
+    },
+    "speaker_selector": {
+      "label": "选择说话人",
+      "info": "从9种预设语音中选择"
+    },
+    "language_selector": {
+      "label": "语言",
+      "info": "选择输出语音的语言"
+    },
+    "emotion_selector": {
+      "label": "情感",
+      "info": "指定情感（可选）"
+    },
+    "speed_slider": {
+      "label": "速度",
+      "info": "0.5（慢）至 2.0（快）"
+    },
+    "generate_button": "生成语音",
+    "audio_output": "生成的语音",
+    "status": "状态",
+    "sample_texts": "示例文本"
+  },
+  "voice_design": {
+    "title": "语音设计",
+    "description": "用文字描述语音特征，生成匹配的声音。英文描述效果更佳。",
+    "text_input": {
+      "label": "朗读文本",
+      "placeholder": "请输入要转换为语音的文本..."
+    },
+    "voice_description": {
+      "label": "语音描述",
+      "placeholder": "例：A calm middle-aged male voice with a warm tone.",
+      "info": "请用英文描述声音特征（中文也可）"
+    },
+    "generate_button": "生成语音",
+    "audio_output": "生成的语音",
+    "status": "状态",
+    "samples_title": "语音设计示例",
+    "use_button": "使用"
+  },
+  "voice_clone": {
+    "title": "语音克隆",
+    "description": "仅需3秒参考音频，即可用该声音朗读新文本。请使用清晰、低噪音的音频。",
+    "notice": "**注意**: 语音克隆使用 PyTorch CPU 引擎，float32 精度（比 MLX 需要更多内存）。",
+    "reference_audio": {
+      "label": "参考音频（推荐3-30秒）"
+    },
+    "reference_language": {
+      "label": "参考音频语言"
+    },
+    "transcribe_button": "Whisper 转录",
+    "reference_text": {
+      "label": "参考音频文本",
+      "placeholder": "输入参考音频中的内容，或使用上方按钮自动转录...",
+      "info": "输入准确的文本可以获得更高质量的克隆效果"
+    },
+    "text_input": {
+      "label": "朗读文本",
+      "placeholder": "输入要用克隆声音朗读的文本..."
+    },
+    "output_language": {
+      "label": "输出语言",
+      "info": "生成语音的语言"
+    },
+    "generate_button": "生成语音",
+    "audio_output": "生成的语音",
+    "status": "状态",
+    "tips": {
+      "title": "提示",
+      "items": [
+        "参考音频 **3-30秒** 效果最佳",
+        "使用在 **安静环境** 中录制的音频",
+        "请 **准确** 输入参考音频的文本",
+        "多语言支持：日语声音也可以说英语"
+      ]
+    },
+    "sample_texts": "示例文本"
+  },
+  "settings": {
+    "title": "设置",
+    "engine": {
+      "title": "引擎设置",
+      "selector": {
+        "label": "首选引擎",
+        "info": "AUTO: 根据任务自动选择。MLX: 高速低内存。MPS: 用于语音克隆。",
+        "options": {
+          "auto": "AUTO（推荐）",
+          "mlx": "MLX（Apple Silicon 优化）",
+          "pytorch_mps": "PyTorch MPS"
+        }
+      },
+      "status_button": "刷新引擎状态",
+      "change_button": "更改引擎",
+      "result": "结果"
+    },
+    "memory": {
+      "title": "内存管理",
+      "usage_label": "内存使用量",
+      "refresh_button": "刷新",
+      "unload_button": "卸载所有模型",
+      "model_management": "模型管理",
+      "estimates": {
+        "title": "内存使用量参考",
+        "note": "使用 MLX 量化模型可以大幅节省内存。"
+      }
+    },
+    "system_info": {
+      "title": "系统信息",
+      "refresh_button": "刷新系统信息",
+      "chip": "芯片",
+      "memory": "内存",
+      "mps_available": "可用",
+      "mps_unavailable": "不可用",
+      "unknown": "未知"
+    },
+    "technical_info": {
+      "title": "技术信息"
+    }
+  },
+  "speakers": {
+    "Chelsie": {
+      "local_name": "切尔西",
+      "description": "明亮的年轻女性声音。充满活力、亲切友好。"
+    },
+    "Ethan": {
+      "local_name": "伊桑",
+      "description": "温和的年轻男性声音。沉稳安静。"
+    },
+    "Aiden": {
+      "local_name": "艾登",
+      "description": "成熟的男性声音。稳重可靠。"
+    },
+    "Bella": {
+      "local_name": "贝拉",
+      "description": "温暖的女性声音。温柔包容。"
+    },
+    "Vivian": {
+      "local_name": "薇薇安",
+      "description": "充满活力的女性声音。活泼明快。"
+    },
+    "Lucas": {
+      "local_name": "卢卡斯",
+      "description": "明亮的年轻男性声音。清爽友好。"
+    },
+    "Eleanor": {
+      "local_name": "埃莉诺",
+      "description": "优雅的女性声音。沉稳知性。"
+    },
+    "Alexander": {
+      "local_name": "亚历山大",
+      "description": "有力量的男性声音。威严稳重。"
+    },
+    "Serena": {
+      "local_name": "塞琳娜",
+      "description": "治愈系女性声音。温和放松。"
+    }
+  },
+  "languages": {
+    "Japanese": "日语",
+    "English": "英语",
+    "Chinese": "中文",
+    "Korean": "韩语",
+    "French": "法语",
+    "German": "德语",
+    "Spanish": "西班牙语",
+    "Italian": "意大利语",
+    "Portuguese": "葡萄牙语",
+    "Russian": "俄语"
+  },
+  "emotions": {
+    "neutral": "中性",
+    "happy": "高兴",
+    "sad": "悲伤",
+    "angry": "愤怒",
+    "surprised": "惊讶",
+    "fearful": "恐惧",
+    "disgusted": "厌恶",
+    "calm": "平静",
+    "excited": "兴奋",
+    "tender": "温柔"
+  },
+  "messages": {
+    "generating": "生成中...",
+    "generated": "生成完成",
+    "error": "错误",
+    "enter_text": "请输入文本。",
+    "upload_reference": "请上传参考音频。",
+    "enter_reference_text": "请输入参考音频的文本。",
+    "enter_voice_description": "请输入语音描述。"
+  }
+}

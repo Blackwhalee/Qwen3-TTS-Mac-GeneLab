@@ -14,6 +14,8 @@ from typing import Any
 
 import gradio as gr
 
+from ui.i18n_utils import t
+
 logger = logging.getLogger(__name__)
 
 
@@ -23,20 +25,26 @@ def get_system_info() -> str:
         from mac.device_utils import get_mac_info
 
         info = get_mac_info()
+        chip = t("settings.system_info.chip")
+        mem = t("settings.system_info.memory")
+        mps_yes = t("settings.system_info.mps_available")
+        mps_no = t("settings.system_info.mps_unavailable")
+        unknown = t("settings.system_info.unknown")
+
         lines = [
-            "### システム情報",
+            f"### {t('settings.system_info.title')}",
             "",
-            f"- **チップ**: {info.get('chip', '不明')}",
-            f"- **メモリ**: {info.get('total_memory_gb', '不明')} GB",
-            f"- **macOS**: {info.get('platform_version', '不明')}",
-            f"- **Python**: {info.get('python_version', '不明')}",
-            f"- **PyTorch**: {info.get('torch_version', '不明')}",
-            f"- **MPS**: {'利用可能' if info.get('mps_available') else '利用不可'}",
+            f"- **{chip}**: {info.get('chip', unknown)}",
+            f"- **{mem}**: {info.get('total_memory_gb', unknown)} GB",
+            f"- **macOS**: {info.get('platform_version', unknown)}",
+            f"- **Python**: {info.get('python_version', unknown)}",
+            f"- **PyTorch**: {info.get('torch_version', unknown)}",
+            f"- **MPS**: {mps_yes if info.get('mps_available') else mps_no}",
         ]
         return "\n".join(lines)
     except Exception as e:
         logger.error(f"システム情報取得エラー: {e}")
-        return f"システム情報の取得に失敗しました: {e}"
+        return f"{t('messages.error')}: {e}"
 
 
 def get_memory_usage() -> dict[str, Any]:
@@ -53,21 +61,16 @@ def get_memory_usage() -> dict[str, Any]:
         }
     except Exception as e:
         logger.error(f"メモリ情報取得エラー: {e}")
-        return {
-            "total_gb": 0,
-            "used_gb": 0,
-            "available_gb": 0,
-            "percent": 0,
-        }
+        return {"total_gb": 0, "used_gb": 0, "available_gb": 0, "percent": 0}
 
 
 def format_memory_display() -> str:
     """メモリ使用量の表示文字列を生成する。"""
     mem = get_memory_usage()
     return (
-        f"使用中: {mem['used_gb']:.1f} GB / {mem['total_gb']:.1f} GB "
+        f"{mem['used_gb']:.1f} GB / {mem['total_gb']:.1f} GB "
         f"({mem['percent']:.1f}%) | "
-        f"空き: {mem['available_gb']:.1f} GB"
+        f"Free: {mem['available_gb']:.1f} GB"
     )
 
 
@@ -79,35 +82,35 @@ def get_engine_status() -> str:
         engine = DualEngine()
         status = engine.get_status()
 
-        lines = ["### エンジン状態", ""]
+        lines = [f"### {t('settings.engine.title')}", ""]
 
         for name, eng_status in status.items():
-            loaded = "ロード済み" if eng_status.is_loaded else "未ロード"
+            loaded = "Loaded" if eng_status.is_loaded else "Not loaded"
             model = eng_status.model_name or "-"
             lines.append(f"**{name.upper()}**")
-            lines.append(f"- 状態: {loaded}")
-            lines.append(f"- モデル: {model}")
-            lines.append(f"- デバイス: {eng_status.device}")
+            lines.append(f"- Status: {loaded}")
+            lines.append(f"- Model: {model}")
+            lines.append(f"- Device: {eng_status.device}")
             lines.append(f"- dtype: {eng_status.dtype}")
             lines.append("")
 
         return "\n".join(lines)
     except Exception as e:
         logger.error(f"エンジン状態取得エラー: {e}")
-        return f"エンジン状態の取得に失敗しました: {e}"
+        return f"{t('messages.error')}: {e}"
 
 
 def change_engine(engine_type: str) -> str:
     """優先エンジンを変更する。"""
     try:
-        from mac.engine import DualEngine, EngineType
+        from mac.engine import DualEngine
 
         engine = DualEngine()
         engine.set_preferred_engine(engine_type)
-        return f"優先エンジンを {engine_type} に変更しました。"
+        return f"Engine changed to: {engine_type}"
     except Exception as e:
         logger.error(f"エンジン変更エラー: {e}")
-        return f"エラー: {e}"
+        return f"{t('messages.error')}: {e}"
 
 
 def unload_models() -> str:
@@ -117,138 +120,106 @@ def unload_models() -> str:
 
         engine = DualEngine()
         engine.unload()
-        return "全モデルをアンロードしました。メモリを解放しました。"
+        return "All models unloaded."
     except Exception as e:
         logger.error(f"モデルアンロードエラー: {e}")
-        return f"エラー: {e}"
+        return f"{t('messages.error')}: {e}"
 
 
 def create_settings_tab() -> None:
     """設定タブを作成する。"""
     with gr.Row():
         with gr.Column(scale=1):
-            gr.Markdown("## エンジン設定")
+            gr.Markdown(f"## {t('settings.engine.title')}")
 
-            # エンジン選択
             engine_selector = gr.Radio(
                 choices=[
-                    ("AUTO（推奨）", "auto"),
-                    ("MLX（Apple Silicon 最適化）", "mlx"),
-                    ("PyTorch MPS", "pytorch_mps"),
+                    (t("settings.engine.selector.options.auto"), "auto"),
+                    (t("settings.engine.selector.options.mlx"), "mlx"),
+                    (t("settings.engine.selector.options.pytorch_mps"), "pytorch_mps"),
                 ],
                 value="auto",
-                label="優先エンジン",
-                info="AUTO: タスクに応じて自動選択。MLX: 高速・省メモリ。MPS: Voice Clone 用。",
+                label=t("settings.engine.selector.label"),
+                info=t("settings.engine.selector.info"),
             )
 
-            engine_status_btn = gr.Button("エンジン状態を更新", variant="secondary")
-            engine_change_btn = gr.Button("エンジンを変更", variant="primary")
+            engine_status_btn = gr.Button(t("settings.engine.status_button"), variant="secondary")
+            engine_change_btn = gr.Button(t("settings.engine.change_button"), variant="primary")
 
             engine_status_display = gr.Markdown(get_engine_status())
 
-            # エンジン変更結果
             engine_change_result = gr.Textbox(
-                label="結果",
+                label=t("settings.engine.result"),
                 interactive=False,
                 visible=True,
             )
 
         with gr.Column(scale=1):
-            gr.Markdown("## メモリ管理")
+            gr.Markdown(f"## {t('settings.memory.title')}")
 
-            # メモリモニター
             memory_display = gr.Textbox(
-                label="メモリ使用量",
+                label=t("settings.memory.usage_label"),
                 value=format_memory_display(),
                 interactive=False,
             )
 
-            memory_refresh_btn = gr.Button("更新", variant="secondary")
+            memory_refresh_btn = gr.Button(t("settings.memory.refresh_button"), variant="secondary")
 
-            # モデルアンロード
-            gr.Markdown("### モデル管理")
+            gr.Markdown(f"### {t('settings.memory.model_management')}")
             unload_btn = gr.Button(
-                "全モデルをアンロード",
+                t("settings.memory.unload_button"),
                 variant="stop",
             )
             unload_result = gr.Textbox(
-                label="結果",
+                label=t("settings.engine.result"),
                 interactive=False,
             )
 
-            # メモリ使用量の目安
             gr.Markdown(
-                """
-                #### メモリ使用量の目安
-                
-                | モデル | dtype | サイズ |
-                |--------|-------|--------|
+                f"""
+                #### {t("settings.memory.estimates.title")}
+
+                | Model | dtype | Size |
+                |-------|-------|------|
                 | 1.7B | bf16 | ~3.4 GB |
                 | 1.7B | 8bit | ~1.7 GB |
                 | 1.7B | 4bit | ~0.9 GB |
                 | 0.6B | bf16 | ~1.2 GB |
-                
-                > MLX の量子化モデルを使用すると、大幅にメモリを節約できます。
+
+                > {t("settings.memory.estimates.note")}
                 """
             )
 
     with gr.Row():
         with gr.Column():
-            gr.Markdown("## システム情報")
             system_info = gr.Markdown(get_system_info())
-            refresh_system_btn = gr.Button("システム情報を更新", variant="secondary")
+            refresh_system_btn = gr.Button(t("settings.system_info.refresh_button"), variant="secondary")
 
     with gr.Row():
         with gr.Column():
             gr.Markdown(
-                """
-                ## 技術情報
-                
-                ### MPS の既知の制約
-                
-                - **Voice Clone**: `float32` 必須（float16 だとエラー）
-                - **FlashAttention 2**: Mac 非対応（SDPA を使用）
-                - **BFloat16**: M1/M2 では不安定な場合あり
-                
-                ### 環境変数
-                
+                f"""
+                ## {t("settings.technical_info.title")}
+
+                ### MPS Limitations
+
+                - **Voice Clone**: `float32` required (float16 causes errors)
+                - **FlashAttention 2**: Not supported on Mac (uses SDPA)
+                - **BFloat16**: May be unstable on M1/M2
+
+                ### Environment Variables
+
                 ```
                 PYTORCH_ENABLE_MPS_FALLBACK=1
-                PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.7
+                PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.0
                 TOKENIZERS_PARALLELISM=false
                 ```
-                
-                ### トラブルシューティング
-                
-                1. **SoX エラー**: `brew install sox`
-                2. **メモリ不足**: 他のアプリを閉じるか、量子化モデルを使用
-                3. **生成が遅い**: MLX エンジンを使用（AUTO で自動選択）
                 """
             )
 
     # イベントハンドラ
-    engine_status_btn.click(
-        fn=get_engine_status,
-        outputs=[engine_status_display],
-    )
-
-    engine_change_btn.click(
-        fn=change_engine,
-        inputs=[engine_selector],
-        outputs=[engine_change_result],
-    )
-
-    memory_refresh_btn.click(
-        fn=format_memory_display,
-        outputs=[memory_display],
-    )
-
-    unload_btn.click(
-        fn=unload_models,
-        outputs=[unload_result],
-    )
-
-    refresh_system_btn.click(
-        fn=get_system_info,
-        outputs=[system_info],
-    )
+    engine_status_btn.click(fn=get_engine_status, outputs=[engine_status_display])
+    engine_change_btn.click(fn=change_engine, inputs=[engine_selector], outputs=[engine_change_result])
+    memory_refresh_btn.click(fn=format_memory_display, outputs=[memory_display])
+    unload_btn.click(fn=unload_models, outputs=[unload_result])
+    refresh_system_btn.click(fn=get_system_info, outputs=[system_info])

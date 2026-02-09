@@ -1,0 +1,168 @@
+{
+  "app": {
+    "title": "Qwen3-TTS-Mac-GeneLab",
+    "subtitle": "Sprachsynthese optimiert fur Apple Silicon Mac"
+  },
+  "tabs": {
+    "custom_voice": "Eigene Stimme",
+    "voice_design": "Stimmendesign",
+    "voice_clone": "Stimme klonen",
+    "settings": "Einstellungen"
+  },
+  "custom_voice": {
+    "title": "Eigene Stimme",
+    "description": "Wahlen Sie aus 9 voreingestellten Stimmen zur Sprachgenerierung.",
+    "text_input": {
+      "label": "Vorzulesender Text",
+      "placeholder": "Geben Sie den Text ein, der in Sprache umgewandelt werden soll..."
+    },
+    "speaker_selector": {
+      "label": "Stimmenauswahl",
+      "info": "Wahlen Sie aus 9 voreingestellten Stimmen"
+    },
+    "language_selector": {
+      "label": "Sprache",
+      "info": "Sprache der Ausgabe wahlen"
+    },
+    "emotion_selector": {
+      "label": "Emotion",
+      "info": "Emotion angeben (optional)"
+    },
+    "speed_slider": {
+      "label": "Geschwindigkeit",
+      "info": "0.5 (langsam) bis 2.0 (schnell)"
+    },
+    "generate_button": "Sprache generieren",
+    "audio_output": "Generiertes Audio",
+    "status": "Status",
+    "sample_texts": "Beispieltexte"
+  },
+  "voice_design": {
+    "title": "Stimmendesign",
+    "description": "Beschreiben Sie die Stimmeneigenschaften per Text, um eine passende Stimme zu generieren. Englische Beschreibungen liefern bessere Ergebnisse.",
+    "text_input": {
+      "label": "Vorzulesender Text",
+      "placeholder": "Geben Sie den Text ein, der in Sprache umgewandelt werden soll..."
+    },
+    "voice_description": {
+      "label": "Stimmenbeschreibung",
+      "placeholder": "Z.B.: A calm middle-aged male voice with a warm tone.",
+      "info": "Beschreiben Sie die Stimme auf Englisch (Deutsch funktioniert auch)"
+    },
+    "generate_button": "Sprache generieren",
+    "audio_output": "Generiertes Audio",
+    "status": "Status",
+    "samples_title": "Stimmendesign-Beispiele",
+    "use_button": "Verwenden"
+  },
+  "voice_clone": {
+    "title": "Stimme klonen",
+    "description": "Mit nur 3 Sekunden Referenzaudio liest das System neuen Text mit dieser Stimme vor. Verwenden Sie sauberes, rauscharmes Audio.",
+    "notice": "**Hinweis**: Stimmklonen verwendet PyTorch CPU mit float32 (benotigt mehr Speicher als MLX).",
+    "reference_audio": {
+      "label": "Referenzaudio (3-30 Sek. empfohlen)"
+    },
+    "reference_language": {
+      "label": "Sprache des Referenzaudios"
+    },
+    "transcribe_button": "Mit Whisper transkribieren",
+    "reference_text": {
+      "label": "Text des Referenzaudios",
+      "placeholder": "Geben Sie den Inhalt des Referenzaudios ein oder nutzen Sie die automatische Transkription...",
+      "info": "Genauer Text ermoglicht eine qualitativ hochwertigere Klonierung"
+    },
+    "text_input": {
+      "label": "Vorzulesender Text",
+      "placeholder": "Geben Sie den Text ein, der mit der geklonten Stimme gelesen werden soll..."
+    },
+    "output_language": {
+      "label": "Ausgabesprache",
+      "info": "Sprache des generierten Audios"
+    },
+    "generate_button": "Sprache generieren",
+    "audio_output": "Generiertes Audio",
+    "status": "Status",
+    "tips": {
+      "title": "Tipps",
+      "items": [
+        "Referenzaudio von **3-30 Sekunden** ist optimal",
+        "Verwenden Sie Audio aus einer **ruhigen Umgebung**",
+        "Geben Sie den Referenztext **genau** ein",
+        "Mehrsprachig: Eine japanische Stimme kann Englisch sprechen"
+      ]
+    },
+    "sample_texts": "Beispieltexte"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "engine": {
+      "title": "Engine-Einstellungen",
+      "selector": {
+        "label": "Bevorzugte Engine",
+        "info": "AUTO: automatische Auswahl. MLX: schnell und speicherschonend. MPS: fur Stimmklonen.",
+        "options": {
+          "auto": "AUTO (empfohlen)",
+          "mlx": "MLX (Apple Silicon optimiert)",
+          "pytorch_mps": "PyTorch MPS"
+        }
+      },
+      "status_button": "Status aktualisieren",
+      "change_button": "Engine andern",
+      "result": "Ergebnis"
+    },
+    "memory": {
+      "title": "Speicherverwaltung",
+      "usage_label": "Speichernutzung",
+      "refresh_button": "Aktualisieren",
+      "unload_button": "Alle Modelle entladen",
+      "model_management": "Modellverwaltung",
+      "estimates": {
+        "title": "Geschatzte Speichernutzung",
+        "note": "Quantisierte MLX-Modelle sparen erheblich Speicher."
+      }
+    },
+    "system_info": {
+      "title": "Systeminformationen",
+      "refresh_button": "Informationen aktualisieren",
+      "chip": "Chip",
+      "memory": "Speicher",
+      "mps_available": "Verfugbar",
+      "mps_unavailable": "Nicht verfugbar",
+      "unknown": "Unbekannt"
+    },
+    "technical_info": {
+      "title": "Technische Informationen"
+    }
+  },
+  "speakers": {
+    "Chelsie": { "local_name": "Chelsie", "description": "Helle junge Frauenstimme. Energisch und freundlich." },
+    "Ethan": { "local_name": "Ethan", "description": "Ruhige junge Mannerstimme. Entspannte Atmosphare." },
+    "Aiden": { "local_name": "Aiden", "description": "Reife Mannerstimme. Stabil und erfahren." },
+    "Bella": { "local_name": "Bella", "description": "Warme Frauenstimme. Sanft und umhullend." },
+    "Vivian": { "local_name": "Vivian", "description": "Energische Frauenstimme. Lebhaft und frohlich." },
+    "Lucas": { "local_name": "Lucas", "description": "Helle junge Mannerstimme. Frisch und freundlich." },
+    "Eleanor": { "local_name": "Eleanor", "description": "Elegante Frauenstimme. Ruhig und intellektuell." },
+    "Alexander": { "local_name": "Alexander", "description": "Kraftvolle Mannerstimme. Wurdevoll und stabil." },
+    "Serena": { "local_name": "Serena", "description": "Beruhigende Frauenstimme. Sanft und entspannend." }
+  },
+  "languages": {
+    "Japanese": "Japanisch", "English": "Englisch", "Chinese": "Chinesisch",
+    "Korean": "Koreanisch", "French": "Franzosisch", "German": "Deutsch",
+    "Spanish": "Spanisch", "Italian": "Italienisch", "Portuguese": "Portugiesisch",
+    "Russian": "Russisch"
+  },
+  "emotions": {
+    "neutral": "Neutral", "happy": "Frohlich", "sad": "Traurig", "angry": "Wutend",
+    "surprised": "Uberrascht", "fearful": "Angstlich", "disgusted": "Angewidert",
+    "calm": "Ruhig", "excited": "Aufgeregt", "tender": "Zartlich"
+  },
+  "messages": {
+    "generating": "Wird generiert...",
+    "generated": "Generierung abgeschlossen",
+    "error": "Fehler",
+    "enter_text": "Bitte geben Sie Text ein.",
+    "upload_reference": "Bitte laden Sie Referenzaudio hoch.",
+    "enter_reference_text": "Bitte geben Sie den Text des Referenzaudios ein.",
+    "enter_voice_description": "Bitte geben Sie eine Stimmenbeschreibung ein."
+  }
+}

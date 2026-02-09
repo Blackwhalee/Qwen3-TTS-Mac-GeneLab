@@ -34,11 +34,12 @@
     },
     "generate_button": "音声を生成",
     "audio_output": "生成された音声",
-    "status": "ステータス"
+    "status": "ステータス",
+    "sample_texts": "サンプルテキスト"
   },
   "voice_design": {
     "title": "ボイスデザイン",
-    "description": "テキストでボイスの特徴を説明すると、その特徴に合った声で音声を生成します。",
+    "description": "テキストでボイスの特徴を説明すると、その特徴に合った声で音声を生成します。英語で記述するとより正確に特徴が反映されます。",
     "text_input": {
       "label": "読み上げテキスト",
       "placeholder": "ここに読み上げたいテキストを入力してください..."
@@ -50,11 +51,14 @@
     },
     "generate_button": "音声を生成",
     "audio_output": "生成された音声",
-    "status": "ステータス"
+    "status": "ステータス",
+    "samples_title": "ボイスデザインのサンプル",
+    "use_button": "使用する"
   },
   "voice_clone": {
     "title": "ボイスクローン",
-    "description": "わずか3秒の参照音声から、その声で新しいテキストを読み上げます。",
+    "description": "わずか3秒の参照音声から、その声で新しいテキストを読み上げます。参照音声は明瞭で、背景ノイズが少ないものを使用してください。",
+    "notice": "**注意**: Voice Clone は PyTorch CPU エンジンで float32 を使用します（MLX より多くのメモリが必要）。",
     "reference_audio": {
       "label": "参照音声（3〜30秒推奨）"
     },
@@ -86,7 +90,8 @@
         "参照音声のテキストは **正確に** 入力",
         "多言語対応: 日本語の声で英語を話すことも可能"
       ]
-    }
+    },
+    "sample_texts": "サンプルテキスト"
   },
   "settings": {
     "title": "設定",
@@ -102,62 +107,43 @@
         }
       },
       "status_button": "エンジン状態を更新",
-      "change_button": "エンジンを変更"
+      "change_button": "エンジンを変更",
+      "result": "結果"
     },
     "memory": {
       "title": "メモリ管理",
       "usage_label": "メモリ使用量",
       "refresh_button": "更新",
       "unload_button": "全モデルをアンロード",
+      "model_management": "モデル管理",
       "estimates": {
-        "title": "メモリ使用量の目安"
+        "title": "メモリ使用量の目安",
+        "note": "MLX の量子化モデルを使用すると、大幅にメモリを節約できます。"
       }
     },
     "system_info": {
       "title": "システム情報",
-      "refresh_button": "システム情報を更新"
+      "refresh_button": "システム情報を更新",
+      "chip": "チップ",
+      "memory": "メモリ",
+      "mps_available": "利用可能",
+      "mps_unavailable": "利用不可",
+      "unknown": "不明"
     },
     "technical_info": {
       "title": "技術情報"
     }
   },
   "speakers": {
-    "Chelsie": {
-      "name_ja": "チェルシー",
-      "description": "明るい若い女性の声。エネルギッシュで親しみやすい。"
-    },
-    "Ethan": {
-      "name_ja": "イーサン",
-      "description": "穏やかな若い男性の声。落ち着いた雰囲気。"
-    },
-    "Aiden": {
-      "name_ja": "エイデン",
-      "description": "渋みのある男性の声。成熟した安定感。"
-    },
-    "Bella": {
-      "name_ja": "ベラ",
-      "description": "温かみのある女性の声。優しく包み込む雰囲気。"
-    },
-    "Vivian": {
-      "name_ja": "ヴィヴィアン",
-      "description": "エネルギッシュな女性の声。活発で明るい。"
-    },
-    "Lucas": {
-      "name_ja": "ルーカス",
-      "description": "明るい若い男性の声。爽やかで親しみやすい。"
-    },
-    "Eleanor": {
-      "name_ja": "エレノア",
-      "description": "上品な女性の声。落ち着いた知的な雰囲気。"
-    },
-    "Alexander": {
-      "name_ja": "アレクサンダー",
-      "description": "力強い男性の声。威厳と安定感。"
-    },
-    "Serena": {
-      "name_ja": "セレナ",
-      "description": "癒やしの女性の声。穏やかでリラックス。"
-    }
+    "Chelsie": { "local_name": "チェルシー", "description": "明るい若い女性の声。エネルギッシュで親しみやすい。" },
+    "Ethan": { "local_name": "イーサン", "description": "穏やかな若い男性の声。落ち着いた雰囲気。" },
+    "Aiden": { "local_name": "エイデン", "description": "渋みのある男性の声。成熟した安定感。" },
+    "Bella": { "local_name": "ベラ", "description": "温かみのある女性の声。優しく包み込む雰囲気。" },
+    "Vivian": { "local_name": "ヴィヴィアン", "description": "エネルギッシュな女性の声。活発で明るい。" },
+    "Lucas": { "local_name": "ルーカス", "description": "明るい若い男性の声。爽やかで親しみやすい。" },
+    "Eleanor": { "local_name": "エレノア", "description": "上品な女性の声。落ち着いた知的な雰囲気。" },
+    "Alexander": { "local_name": "アレクサンダー", "description": "力強い男性の声。威厳と安定感。" },
+    "Serena": { "local_name": "セレナ", "description": "癒やしの女性の声。穏やかでリラックス。" }
   },
   "languages": {
     "Japanese": "日本語",
