@@ -14,7 +14,7 @@ settings:
     ARCHS: arm64
     ONLY_ACTIVE_ARCH: "YES"
     PRODUCT_NAME: "黑鲸自定义TTS"
-    MARKETING_VERSION: "0.1.0"
+    MARKETING_VERSION: "1.0.0"
     CURRENT_PROJECT_VERSION: "1"
     CODE_SIGN_IDENTITY: "-"
     CODE_SIGN_STYLE: Automatic
@@ -38,8 +38,6 @@ targets:
         LD_RUNPATH_SEARCH_PATHS: "@executable_path/../Frameworks"
         COMBINE_HIDPI_IMAGES: "YES"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
-    entitlements:
-      path: YujieTTS/YujieTTS.entitlements
     info:
       path: YujieTTS/Info.plist
     dependencies: []

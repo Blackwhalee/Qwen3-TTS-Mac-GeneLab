@@ -21,7 +21,7 @@ final class AudioService: ObservableObject {
     private var player: AVAudioPlayer?
     private var progressTimer: Timer?
     private var currentResult: GenerationResult?
-    private let logger = Logger(subsystem: "com.yujie.tts", category: "AudioService")
+    private let logger = Logger(subsystem: "com.blackwhale.YujieTTS", category: "AudioService")
     private let historyStore = GenerationHistoryStore()
 
     init() {

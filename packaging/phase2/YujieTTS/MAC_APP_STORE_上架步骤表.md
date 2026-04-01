@@ -24,7 +24,7 @@
   ```
   得到 `dist/yujie-python-env.tar.gz` 与 `dist/yujie-project-src.tar.gz`。
 
-- [ ] **6** — 将上述两个文件上传到 **HTTPS 可直链** 的位置（对象存储、GitHub Releases、自建 CDN 等），并把 **`EnvironmentManager.swift`** 里的 `envTarballRemoteURL`、`srcTarballRemoteURL` 改成真实 URL（或改为把 tar 打进 App 资源并优先本地，需改代码/工程）。
+- [x] **6** — 已托管：**GitHub Release** [`Blackwhalee/-tts` · `v1.0`](https://github.com/Blackwhalee/-tts/releases/tag/v1.0)；`EnvironmentManager.swift` 已指向 `.../releases/download/v1.0/yujie-*.tar.gz`。
 
 - [ ] **7** — **（建议）** 在一台 **仅 Apple Silicon** 的 Mac 上删除应用容器数据后冷启动，验证能 **自动下载 → 解压 → 拉模型 → 进入主界面**（模型需能访问 Hugging Face；国内网络需自备镜像或说明）。
 
@@ -70,6 +70,6 @@
 |------|------|------|
 | Xcode Release 编译 | ✅ 已在 CI/本机验证通过 | `Release` 配置可 `Archive` |
 | `build_env_pack.sh` 打出 dist 两包 | ✅ 已在仓库机器跑通 | 产物：`dist/yujie-python-env.tar.gz`、`dist/yujie-project-src.tar.gz`；脚本已加 `--ignore-missing-files`；请用 **conda 环境里的** `python -m pip install .` |
-| HTTPS 托管两个 `.tar.gz` | ⬜ 待做 | 上传后把 URL 写入 `EnvironmentManager.swift` |
+| HTTPS 托管两个 `.tar.gz` | ✅ 已做 | GitHub Releases `v1.0`；代码内直链已配置 |
 | 隐私政策 / 支持页 URL | ⬜ 待做 | 上架必填 |
 | 冷启动全流程实测 | ⬜ 待做 | 配好 URL 或把 tar 放 `~/.../dist/` 测首次引导 |

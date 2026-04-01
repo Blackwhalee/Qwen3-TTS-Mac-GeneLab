@@ -27,8 +27,7 @@ final class EnvironmentManager: ObservableObject {
 
     // MARK: - Configuration
 
-    /// Remote URLs — used only if local tarballs not found.
-    /// Replace with your actual hosting URLs for distribution.
+    /// Remote URLs when local tarballs are not found (GitHub Release assets).
     static let envTarballRemoteURL  = "https://github.com/Blackwhalee/-tts/releases/download/v1.0/yujie-python-env.tar.gz"
     static let srcTarballRemoteURL  = "https://github.com/Blackwhalee/-tts/releases/download/v1.0/yujie-project-src.tar.gz"
     static let modelRepoID          = "mlx-community/Qwen3-TTS-12Hz-1.7B-VoiceDesign-8bit"
@@ -104,7 +103,7 @@ final class EnvironmentManager: ObservableObject {
         return env
     }
 
-    private let logger = Logger(subsystem: "com.yujie.tts", category: "EnvManager")
+    private let logger = Logger(subsystem: "com.blackwhale.YujieTTS", category: "EnvManager")
 
     // MARK: - Public API
 

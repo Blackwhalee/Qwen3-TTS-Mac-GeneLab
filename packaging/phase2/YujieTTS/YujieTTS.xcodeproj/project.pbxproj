@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		189D328BC831AE981185F585 /* AudioService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A19082D566FE97497DE937 /* AudioService.swift */; };
 		18F8A0C18AE20B03D8A9393C /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A705B7E05CB3B18ED529A0 /* HistoryView.swift */; };
+		26130991C4822C53228A97C4 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE291450A580E657BC8B0C1 /* PaywallView.swift */; };
 		3D975D6C707836F227B02CB9 /* VoiceProfileSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = E306FE7A63EEE3FF39EF93C1 /* VoiceProfileSnapshot.swift */; };
 		4C2D62FDCB28248DE10D30BB /* GenerationHistoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784D21C308706E4FF404B34A /* GenerationHistoryStore.swift */; };
 		5027F66A5562C4878C101156 /* ProcessManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F8A9B496E8C1152AC1DB7D8 /* ProcessManager.swift */; };
@@ -24,15 +25,15 @@
 		9FD947D24A69523D9F3490CA /* VoiceConfigPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E642F7F87F6D655897695D3F /* VoiceConfigPanel.swift */; };
 		B8A00776FA2120D865B99D33 /* TextInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47913A1EC8F7D1478F61B243 /* TextInputView.swift */; };
 		C465B0E395825E3ECAA0A432 /* PlaybackBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFEC3B8EB1EB582B1AAFB7B5 /* PlaybackBar.swift */; };
+		D2339184EB848F740AA66AE2 /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0719B68ACF04E1DE8029EF74 /* PurchaseManager.swift */; };
+		D5C03713CB7AB39EBC5AC4B0 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = FB4CC7B1BED888BE0325A8B2 /* PrivacyInfo.xcprivacy */; };
 		E55B85084072D4EABA4ABA18 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8490557AF2EB176A52B242B /* MainView.swift */; };
 		F4575B9AA2C5AD8E79E0BADA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 777DC2C1CA53426720696CD3 /* Assets.xcassets */; };
 		FD833B93D156EE39995CD52C /* BootstrapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96A1FE2F8EC1D72782643E9E /* BootstrapView.swift */; };
-		B1E8A2010003D566FE974903 /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E8A2010001D566FE974901 /* PurchaseManager.swift */; };
-		B1E8A2010004D566FE974904 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E8A2010002D566FE974902 /* PaywallView.swift */; };
-		C1A2B3010002D566FE974902 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = C1A2B3010001D566FE974901 /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0719B68ACF04E1DE8029EF74 /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
 		0872BE47891B7731030A0869 /* VoiceLibraryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceLibraryStore.swift; sourceTree = "<group>"; };
 		09E5E511C31714F0421BE1F8 /* VoiceLibraryEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceLibraryEntry.swift; sourceTree = "<group>"; };
 		30A705B7E05CB3B18ED529A0 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
@@ -41,7 +42,6 @@
 		5B79C9882F2DA80864E82F60 /* VoiceConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceConfig.swift; sourceTree = "<group>"; };
 		63EE750AA3578D9C4793DC53 /* YujieTTS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YujieTTS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		701B6257F8465EF4F0DA16CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		C1A2B3010001D566FE974901 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		777DC2C1CA53426720696CD3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		784D21C308706E4FF404B34A /* GenerationHistoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerationHistoryStore.swift; sourceTree = "<group>"; };
 		8F8A9B496E8C1152AC1DB7D8 /* ProcessManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessManager.swift; sourceTree = "<group>"; };
@@ -54,11 +54,11 @@
 		D657FB9C4A5DA9131B3D24F6 /* yujie.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = yujie.json; sourceTree = "<group>"; };
 		E306FE7A63EEE3FF39EF93C1 /* VoiceProfileSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceProfileSnapshot.swift; sourceTree = "<group>"; };
 		E642F7F87F6D655897695D3F /* VoiceConfigPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceConfigPanel.swift; sourceTree = "<group>"; };
+		EEE291450A580E657BC8B0C1 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
 		EFEC3B8EB1EB582B1AAFB7B5 /* PlaybackBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackBar.swift; sourceTree = "<group>"; };
 		F8490557AF2EB176A52B242B /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
-		B1E8A2010001D566FE974901 /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
-		B1E8A2010002D566FE974902 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
 		F9A19082D566FE97497DE937 /* AudioService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioService.swift; sourceTree = "<group>"; };
+		FB4CC7B1BED888BE0325A8B2 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -79,7 +79,7 @@
 				D2B03318F18549C9C914882F /* App.swift */,
 				777DC2C1CA53426720696CD3 /* Assets.xcassets */,
 				701B6257F8465EF4F0DA16CB /* Info.plist */,
-				C1A2B3010001D566FE974901 /* PrivacyInfo.xcprivacy */,
+				FB4CC7B1BED888BE0325A8B2 /* PrivacyInfo.xcprivacy */,
 				D003A1A882CFF5637670FAC9 /* YujieTTS.entitlements */,
 				69657B8BFDD6C59914B64FA9 /* Models */,
 				AA6E019FA80A88659D566A09 /* Resources */,
@@ -103,11 +103,11 @@
 				96A1FE2F8EC1D72782643E9E /* BootstrapView.swift */,
 				30A705B7E05CB3B18ED529A0 /* HistoryView.swift */,
 				F8490557AF2EB176A52B242B /* MainView.swift */,
+				EEE291450A580E657BC8B0C1 /* PaywallView.swift */,
 				EFEC3B8EB1EB582B1AAFB7B5 /* PlaybackBar.swift */,
 				CFE2AC0327094DCE118761A5 /* SettingsView.swift */,
 				47913A1EC8F7D1478F61B243 /* TextInputView.swift */,
 				E642F7F87F6D655897695D3F /* VoiceConfigPanel.swift */,
-				B1E8A2010002D566FE974902 /* PaywallView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -128,8 +128,8 @@
 				CE52930B99A83813F5B408D7 /* EnvironmentManager.swift */,
 				784D21C308706E4FF404B34A /* GenerationHistoryStore.swift */,
 				8F8A9B496E8C1152AC1DB7D8 /* ProcessManager.swift */,
+				0719B68ACF04E1DE8029EF74 /* PurchaseManager.swift */,
 				0872BE47891B7731030A0869 /* VoiceLibraryStore.swift */,
-				B1E8A2010001D566FE974901 /* PurchaseManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -210,8 +210,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				F4575B9AA2C5AD8E79E0BADA /* Assets.xcassets in Resources */,
+				D5C03713CB7AB39EBC5AC4B0 /* PrivacyInfo.xcprivacy in Resources */,
 				9711E9A58D03308D7D800555 /* yujie.json in Resources */,
-				C1A2B3010002D566FE974902 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -231,8 +231,10 @@
 				997D55E7D8BE6699AF31D644 /* GenerationResult.swift in Sources */,
 				18F8A0C18AE20B03D8A9393C /* HistoryView.swift in Sources */,
 				E55B85084072D4EABA4ABA18 /* MainView.swift in Sources */,
+				26130991C4822C53228A97C4 /* PaywallView.swift in Sources */,
 				C465B0E395825E3ECAA0A432 /* PlaybackBar.swift in Sources */,
 				5027F66A5562C4878C101156 /* ProcessManager.swift in Sources */,
+				D2339184EB848F740AA66AE2 /* PurchaseManager.swift in Sources */,
 				66BC1C466105A912C1FF3576 /* SettingsView.swift in Sources */,
 				B8A00776FA2120D865B99D33 /* TextInputView.swift in Sources */,
 				84F887BBEB166E6467F0743F /* VoiceConfig.swift in Sources */,
@@ -240,8 +242,6 @@
 				5C17D001DE3730DF38D51C4A /* VoiceLibraryEntry.swift in Sources */,
 				9BAADF734956CFC34FA2EF31 /* VoiceLibraryStore.swift in Sources */,
 				3D975D6C707836F227B02CB9 /* VoiceProfileSnapshot.swift in Sources */,
-				B1E8A2010003D566FE974903 /* PurchaseManager.swift in Sources */,
-				B1E8A2010004D566FE974904 /* PaywallView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -305,7 +305,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 1.0.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -368,7 +368,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 1.0.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -386,7 +386,6 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = YujieTTS/YujieTTS.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
-				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = YujieTTS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.blackwhale.YujieTTS;
@@ -400,7 +399,6 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = YujieTTS/YujieTTS.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
-				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = YujieTTS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.blackwhale.YujieTTS;

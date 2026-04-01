@@ -37,7 +37,7 @@ final class EngineService: ObservableObject {
     private let processManager = ProcessManager()
     private var port: Int = 0
     private var healthTimer: Timer?
-    private let logger = Logger(subsystem: "com.yujie.tts", category: "EngineService")
+    private let logger = Logger(subsystem: "com.blackwhale.YujieTTS", category: "EngineService")
 
     private var baseURL: String { "http://127.0.0.1:\(port)" }
 

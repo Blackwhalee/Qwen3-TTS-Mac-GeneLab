@@ -6,7 +6,7 @@ import os
 final class ProcessManager {
     private var process: Process?
     private var stdoutPipe: Pipe?
-    private let logger = Logger(subsystem: "com.yujie.tts", category: "ProcessManager")
+    private let logger = Logger(subsystem: "com.blackwhale.YujieTTS", category: "ProcessManager")
 
     var isRunning: Bool { process?.isRunning ?? false }
 
@@ -55,8 +55,10 @@ final class ProcessManager {
         proc.executableURL = URL(fileURLWithPath: actualPython)
         proc.arguments = [actualScript, "--port", "0"]
 
+        let voiceCfg = EnvironmentManager.appSupportDir.appendingPathComponent("voice-config", isDirectory: true)
         let childEnv = EnvironmentManager.pythonProcessEnvironment(extra: [
             "YUJIE_TTS_PORT_FILE": portFilePath,
+            "YUJIE_VOICE_CONFIG_DIR": voiceCfg.path,
             "PYTORCH_ENABLE_MPS_FALLBACK": "1",
             "PYTORCH_MPS_HIGH_WATERMARK_RATIO": "0.0",
             "TOKENIZERS_PARALLELISM": "false",

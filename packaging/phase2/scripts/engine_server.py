@@ -49,7 +49,13 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-VOICE_CONFIG_DIR = Path.home() / ".openclaw" / "yujie-voice"
+# App 通过 YUJIE_VOICE_CONFIG_DIR 指向沙盒内目录；未设置时保持 ~/.openclaw 以便 CLI/调试。
+VOICE_CONFIG_DIR = Path(
+    os.environ.get(
+        "YUJIE_VOICE_CONFIG_DIR",
+        str(Path.home() / ".openclaw" / "yujie-voice"),
+    )
+)
 DEFAULT_CONFIG = VOICE_CONFIG_DIR / "config.json"
 
 logging.basicConfig(
