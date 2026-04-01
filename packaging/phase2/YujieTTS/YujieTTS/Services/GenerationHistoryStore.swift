@@ -19,13 +19,33 @@ final class GenerationHistoryStore {
     private let manifestURL: URL
 
     init() {
-        let bid = Bundle.main.bundleIdentifier ?? "com.blackwhale.YujieTTS"
-        let base = fm.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-        rootDir = base.appendingPathComponent(bid, isDirectory: true)
-        audioDir = rootDir.appendingPathComponent("HistoryAudio", isDirectory: true)
-        manifestURL = rootDir.appendingPathComponent("generation_history.json")
+        // 与 EnvironmentManager（Python 环境、模型缓存）共用 `Application Support/YujieTTS/`
+        let unified = EnvironmentManager.appSupportDir
+        rootDir = unified
+        audioDir = unified.appendingPathComponent("HistoryAudio", isDirectory: true)
+        manifestURL = unified.appendingPathComponent("generation_history.json")
         try? fm.createDirectory(at: rootDir, withIntermediateDirectories: true)
         try? fm.createDirectory(at: audioDir, withIntermediateDirectories: true)
+        migrateLegacyHistoryIfNeeded()
+    }
+
+    /// 旧版曾使用 `Application Support/<BundleID>/`，迁入统一目录以免升级用户丢历史
+    private func migrateLegacyHistoryIfNeeded() {
+        let bid = Bundle.main.bundleIdentifier ?? "com.blackwhale.YujieTTS"
+        guard let base = fm.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else { return }
+        let legacyRoot = base.appendingPathComponent(bid, isDirectory: true)
+        let legacyManifest = legacyRoot.appendingPathComponent("generation_history.json")
+        let legacyAudio = legacyRoot.appendingPathComponent("HistoryAudio")
+        guard fm.fileExists(atPath: legacyManifest.path), !fm.fileExists(atPath: manifestURL.path) else { return }
+        try? fm.copyItem(at: legacyManifest, to: manifestURL)
+        guard fm.fileExists(atPath: legacyAudio.path),
+              let items = try? fm.contentsOfDirectory(at: legacyAudio, includingPropertiesForKeys: nil) else { return }
+        for item in items {
+            let dest = audioDir.appendingPathComponent(item.lastPathComponent)
+            if !fm.fileExists(atPath: dest.path) {
+                try? fm.copyItem(at: item, to: dest)
+            }
+        }
     }
 
     func loadResults() -> [GenerationResult] {

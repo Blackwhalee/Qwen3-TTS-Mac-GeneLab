@@ -71,5 +71,6 @@
 | Xcode Release 编译 | ✅ 已在 CI/本机验证通过 | `Release` 配置可 `Archive` |
 | `build_env_pack.sh` 打出 dist 两包 | ✅ 已在仓库机器跑通 | 产物：`dist/yujie-python-env.tar.gz`、`dist/yujie-project-src.tar.gz`；脚本已加 `--ignore-missing-files`；请用 **conda 环境里的** `python -m pip install .` |
 | HTTPS 托管两个 `.tar.gz` | ✅ 已做 | GitHub Releases `v1.0`；代码内直链已配置 |
+| `main` 推送到远端 | ⬜ 待做 | 本机：`git push origin main`（需已登录 GitHub） |
 | 隐私政策 / 支持页 URL | ⬜ 待做 | 上架必填 |
 | 冷启动全流程实测 | ⬜ 待做 | 配好 URL 或把 tar 放 `~/.../dist/` 测首次引导 |
