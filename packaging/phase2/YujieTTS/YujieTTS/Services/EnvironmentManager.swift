@@ -2,8 +2,9 @@ import Foundation
 import os
 
 /// Manages the self-contained Python environment and ML models.
-/// On first launch: downloads conda-pack tarball → extracts → downloads model.
-/// Subsequent launches: just verifies paths exist.
+/// **App Store：** 环境与源码包应打进 `Resources/bootstrap/`，首启从本地包解压，不经 GitHub。
+/// 若包内缺失（仅开发或未跑 prepare 脚本）则回退到 `~/…/dist` 与 HTTPS。
+/// 模型仍可能从 Hugging Face 拉取（体积大，需网络）。
 @MainActor
 final class EnvironmentManager: ObservableObject {
 
@@ -27,7 +28,7 @@ final class EnvironmentManager: ObservableObject {
 
     // MARK: - Configuration
 
-    /// Remote URLs when local tarballs are not found (GitHub Release assets).
+    /// 仅当应用包与本地 dist 均无归档时的回退地址（开发/灾备）。
     static let envTarballRemoteURL  = "https://github.com/Blackwhalee/-tts/releases/download/v1.0/yujie-python-env.tar.gz"
     static let srcTarballRemoteURL  = "https://github.com/Blackwhalee/-tts/releases/download/v1.0/yujie-project-src.tar.gz"
     static let modelRepoID          = "mlx-community/Qwen3-TTS-12Hz-1.7B-VoiceDesign-8bit"
@@ -47,16 +48,24 @@ final class EnvironmentManager: ObservableObject {
         return nil
     }
 
+    private static let bundledBootstrapDir = "bootstrap"
+
     private nonisolated static func localTarballSearchPaths(_ filename: String) -> [URL] {
         var paths: [URL] = []
-        // 1. Inside app bundle Resources
+        let fm = FileManager.default
+
+        // 1. App Store：Resources/bootstrap/（与 Apple 分发的主包一同到达用户）
         if let res = Bundle.main.resourceURL {
+            let inBootstrap = res.appendingPathComponent("\(bundledBootstrapDir)/\(filename)")
+            paths.append(inBootstrap)
             paths.append(res.appendingPathComponent(filename))
         }
-        // 2. Project dist/ (dev mode)
-        let home = FileManager.default.homeDirectoryForCurrentUser
+
+        // 2. 开发机 GeneLab dist/
+        let home = fm.homeDirectoryForCurrentUser
         paths.append(home.appendingPathComponent("Qwen3-TTS-Mac-GeneLab/dist/\(filename)"))
-        // 3. Next to the .app
+
+        // 3. 与 .app 同目录（本地测试）
         if let execURL = Bundle.main.executableURL {
             let appDir = execURL.deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
             paths.append(appDir.appendingPathComponent(filename))
@@ -210,7 +219,10 @@ final class EnvironmentManager: ObservableObject {
         if let local = localFile {
             logger.info("Using local tarball for \(label): \(local.path)")
             phase = phaseExtract
-            statusText = "正在安装\(label)（本地文件）…"
+            let fromBundle = local.path.hasPrefix(Bundle.main.bundlePath)
+            statusText = fromBundle
+                ? "正在安装\(label)（应用内资源，不经外网下载）…"
+                : "正在安装\(label)（本机文件）…"
             progress = 0.5
             tarball = local
         } else {

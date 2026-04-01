@@ -25,11 +25,19 @@
   ```
   得到 `dist/yujie-python-env.tar.gz` 与 `dist/yujie-project-src.tar.gz`。
 
-- [x] **6** — 已托管：**GitHub Release** [`Blackwhalee/-tts` · `v1.0`](https://github.com/Blackwhalee/-tts/releases/tag/v1.0)；`EnvironmentManager.swift` 已指向 `.../releases/download/v1.0/yujie-*.tar.gz`。
+- [ ] **5b** — **（App Store 必做）** 将上述两包 **打进 App 资源**，随商店安装一并下发（**消除用户首启从 GitHub 拉环境**）：
+  ```bash
+  cd /path/to/Qwen3-TTS-Mac-GeneLab/packaging/phase2/YujieTTS
+  bash prepare_bootstrap_resources.sh
+  ```
+  成功后 `YujieTTS/Resources/bootstrap/` 下有两枚 `.tar.gz`，再 **Clean + Archive**。大包已 `.gitignore`，勿提交进 Git。
 
-- [ ] **7** — **（建议）** 在一台 **仅 Apple Silicon** 的 Mac 上删除应用容器数据后冷启动，验证能 **自动下载 → 解压 → 拉模型 → 进入主界面**（模型需能访问 Hugging Face；国内网络需自备镜像或说明）。
-  - **免网下测环境与源码：** 在本机先执行步骤 5 打出 `dist/yujie-*.tar.gz`，放到 **`~/Qwen3-TTS-Mac-GeneLab/dist/`**（与 `EnvironmentManager` 开发路径一致），再启动 App，会**优先走本地包**、不依赖 GitHub。
-  - **清除半装状态：** 若曾卡在「环境下载」：退出 App，删掉沙盒内 **`~/Library/Containers/com.blackwhale.YujieTTS/Data/Library/Application Support/YujieTTS`**（若路径因签名略有不同，可在访达「前往文件夹」搜 `YujieTTS`），再重开。当前版本已改为用 **磁盘流式下载** 大包，避免旧版整包进内存导致转圈假死。
+- [x] **6** — **商店用户：** 优先使用 **`Contents/Resources/bootstrap/`** 内归档（与 Apple CDN 同步到达）。**GitHub Release** [`Blackwhalee/-tts` · `v1.0`](https://github.com/Blackwhalee/-tts/releases/tag/v1.0) 仅作 **开发与包内缺失时的回退**。
+
+- [ ] **7** — **（建议）** 在 **Apple Silicon** Mac 上删除应用容器数据后冷启动，验证：**解压引导包 → 拉模型 → 进入主界面**。  
+  - **环境与源码：** 正式包从 **应用内 `bootstrap`** 安装，不经外网（见 5b）。**语音模型** 仍约 **2.9GB**，需访问 **Hugging Face**（与 App Store CDN 无关；国内仍可能慢，审核备注中说明）。若将来要把模型也放进包内，体积会再增数 GB，需单独评估。  
+  - **开发调试：** 可将 `dist/yujie-*.tar.gz` 放 **`~/Qwen3-TTS-Mac-GeneLab/dist/`** 或未打 bootstrap 时使用 GitHub 回退。  
+  - **清除半装状态：** 退出 App，删掉沙盒内 **`Application Support/YujieTTS`**（访达可搜 `YujieTTS`）。
 
 ## 阶段 C：Xcode 工程与签名
 
@@ -54,7 +62,7 @@
 
 - [ ] **14** — **（须本人）** 在 App Store Connect 填写：副标题、描述、关键词、**隐私政策 URL**、支持 URL、分类、年龄分级、**App 隐私**问卷、截图（Mac 窗口尺寸按苹果要求）。
 
-- [ ] **15** — 选择刚上传的构建版本，关联内购商品（若适用），填写 **审核备注**（测试账号若有、如何触发首次下载、HF 需网络等）。
+- [ ] **15** — 选择刚上传的构建版本，关联内购商品（若适用法律），填写 **审核备注**：**Python 环境与源码已内置在 App 包内**；首次使用需 **联网下载 HF 模型**（约 2.9GB）；测试账号若有请附上。
 
 - [ ] **16** — 点击 **提交以供审核**，等待结果；被拒后按 Resolution Center 修改再传构建。
 
@@ -73,7 +81,8 @@
 |------|------|------|
 | Xcode Release 编译 | ✅ 已在 CI/本机验证通过 | `Release` 配置可 `Archive` |
 | `build_env_pack.sh` 打出 dist 两包 | ✅ 已在仓库机器跑通 | 产物：`dist/yujie-python-env.tar.gz`、`dist/yujie-project-src.tar.gz`；脚本已加 `--ignore-missing-files`；请用 **conda 环境里的** `python -m pip install .` |
-| HTTPS 托管两个 `.tar.gz` | ✅ 已做 | GitHub Releases `v1.0`；代码内直链已配置 |
+| 环境与源码进 App 包（bootstrap） | ✅ 流程已接入 | **上架前**执行 `prepare_bootstrap_resources.sh`；用户从商店安装即可本地解压，**不依赖 GitHub 速度** |
+| HTTPS 回退（GitHub） | ✅ 已配置 | 仅包内缺失时使用；见 `EnvironmentManager` |
 | `main` 推送到远端 | ✅ 已做 | 远端：`https://github.com/Blackwhalee/Qwen3-TTS-Mac-GeneLab`（与 `hiroki-abe-58` 无关；引导包 Release 仍在 [`Blackwhalee/-tts` · v1.0](https://github.com/Blackwhalee/-tts/releases/tag/v1.0)） |
 | 隐私政策 / 支持页 URL | ✅ 草案已提交仓库 | 源文件：`docs/privacy-policy.html`、`docs/support.html`；**对外 URL** 须在 GitHub 启用 Pages 后填入 Connect（见下方「上架用静态页」） |
 | 冷启动全流程实测 | ⬜ 待做 | 配好 URL 或把 tar 放 `~/.../dist/` 测首次引导 |

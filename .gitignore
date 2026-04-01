@@ -140,6 +140,9 @@ Icon
 # Cursor
 .cursor/
 
+# YujieTTS App Store bootstrap blobs（上架前用 prepare_bootstrap_resources.sh 复制，勿提交大包）
+packaging/phase2/YujieTTS/YujieTTS/Resources/bootstrap/*.tar.gz
+
 # Models (large files)
 models/
 *.bin

@@ -17,6 +17,7 @@
 		66BC1C466105A912C1FF3576 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE2AC0327094DCE118761A5 /* SettingsView.swift */; };
 		68FF44AE9BA6F16AA2F61774 /* EngineService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A617C7E09D6BF6A1BEB9FD1 /* EngineService.swift */; };
 		7134A5D4EA8C915BBE8D4112 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B03318F18549C9C914882F /* App.swift */; };
+		7B25A72A71C17EEEF1F9287A /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1642A4EA390564B7D787120D /* README.txt */; };
 		7B342850EBBD181D56AD1006 /* EnvironmentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE52930B99A83813F5B408D7 /* EnvironmentManager.swift */; };
 		84F887BBEB166E6467F0743F /* VoiceConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79C9882F2DA80864E82F60 /* VoiceConfig.swift */; };
 		9711E9A58D03308D7D800555 /* yujie.json in Resources */ = {isa = PBXBuildFile; fileRef = D657FB9C4A5DA9131B3D24F6 /* yujie.json */; };
@@ -36,6 +37,7 @@
 		0719B68ACF04E1DE8029EF74 /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
 		0872BE47891B7731030A0869 /* VoiceLibraryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceLibraryStore.swift; sourceTree = "<group>"; };
 		09E5E511C31714F0421BE1F8 /* VoiceLibraryEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceLibraryEntry.swift; sourceTree = "<group>"; };
+		1642A4EA390564B7D787120D /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		30A705B7E05CB3B18ED529A0 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		47913A1EC8F7D1478F61B243 /* TextInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInputView.swift; sourceTree = "<group>"; };
 		5A617C7E09D6BF6A1BEB9FD1 /* EngineService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineService.swift; sourceTree = "<group>"; };
@@ -62,6 +64,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		416F0F371066486577DDA35D /* bootstrap */ = {
+			isa = PBXGroup;
+			children = (
+				1642A4EA390564B7D787120D /* README.txt */,
+			);
+			path = bootstrap;
+			sourceTree = "<group>";
+		};
 		69657B8BFDD6C59914B64FA9 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -92,6 +102,7 @@
 		AA6E019FA80A88659D566A09 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				416F0F371066486577DDA35D /* bootstrap */,
 				B384D21A6287B62A0692A535 /* default-voices */,
 			);
 			path = Resources;
@@ -211,6 +222,7 @@
 			files = (
 				F4575B9AA2C5AD8E79E0BADA /* Assets.xcassets in Resources */,
 				D5C03713CB7AB39EBC5AC4B0 /* PrivacyInfo.xcprivacy in Resources */,
+				7B25A72A71C17EEEF1F9287A /* README.txt in Resources */,
 				9711E9A58D03308D7D800555 /* yujie.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -31,6 +31,10 @@ targets:
     resources:
       - path: YujieTTS/Resources/default-voices
         buildPhase: resources
+      # 上架前运行 prepare_bootstrap_resources.sh 填入 .tar.gz；optional 避免未复制时工程无法生成
+      - path: YujieTTS/Resources/bootstrap
+        buildPhase: resources
+        optional: true
     settings:
       base:
         INFOPLIST_FILE: YujieTTS/Info.plist
