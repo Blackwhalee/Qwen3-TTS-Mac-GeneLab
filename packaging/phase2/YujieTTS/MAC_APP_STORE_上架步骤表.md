@@ -4,7 +4,8 @@
 
 ## 阶段 A：账号与 App Store Connect
 
-- [ ] **1** — **（须本人）** 已加入 [Apple Developer Program](https://developer.apple.com/programs/)（年费约 $99），并能用该 Apple ID 登录 [developer.apple.com](https://developer.apple.com) 与 [App Store Connect](https://appstoreconnect.apple.com)。
+- [ ] **1** — **（须本人）** 已加入 [Apple Developer Program](https://developer.apple.com/programs/)（年费约 $99），并能用该 Apple ID 登录 [developer.apple.com](https://developer.apple.com) 与 [App Store Connect](https://appstoreconnect.apple.com）。  
+  - **当前：** 若已付款但账号尚未生效，通常 **24～48 小时内** 会开通；生效前无法创建分发证书与在 Connect 中完成全部操作，可先完成本仓库 **阶段 B 冷启动测试**、**启用 GitHub Pages（见文末）** 与 **截图**。
 
 - [ ] **2** — **（须本人）** 在 App Store Connect →「App」→「+」新建 **Mac App**：名称、主要语言、Bundle ID 选 **`com.blackwhale.YujieTTS`**（须与 Xcode 一致）。若 ID 未出现，先在 [Certificates, Identifiers & Profiles](https://developer.apple.com/account/resources/identifiers/list) 注册该 App ID 并勾选 **Mac**。
 
@@ -72,5 +73,18 @@
 | `build_env_pack.sh` 打出 dist 两包 | ✅ 已在仓库机器跑通 | 产物：`dist/yujie-python-env.tar.gz`、`dist/yujie-project-src.tar.gz`；脚本已加 `--ignore-missing-files`；请用 **conda 环境里的** `python -m pip install .` |
 | HTTPS 托管两个 `.tar.gz` | ✅ 已做 | GitHub Releases `v1.0`；代码内直链已配置 |
 | `main` 推送到远端 | ✅ 已做 | 远端：`https://github.com/Blackwhalee/Qwen3-TTS-Mac-GeneLab`（与 `hiroki-abe-58` 无关；引导包 Release 仍在 [`Blackwhalee/-tts` · v1.0](https://github.com/Blackwhalee/-tts/releases/tag/v1.0)） |
-| 隐私政策 / 支持页 URL | ⬜ 待做 | 上架必填 |
+| 隐私政策 / 支持页 URL | ✅ 草案已提交仓库 | 源文件：`docs/privacy-policy.html`、`docs/support.html`；**对外 URL** 须在 GitHub 启用 Pages 后填入 Connect（见下方「上架用静态页」） |
 | 冷启动全流程实测 | ⬜ 待做 | 配好 URL 或把 tar 放 `~/.../dist/` 测首次引导 |
+
+---
+
+## 上架用静态页（隐私政策 / 支持 URL）
+
+仓库已包含可公开托管的 HTML（`docs/`）。**开发者计划生效后**，在 GitHub 打开 **`Blackwhalee/Qwen3-TTS-Mac-GeneLab`** → **Settings** → **Pages** → **Build and deployment**：Source 选 **Deploy from a branch**，Branch 选 **`main`**，文件夹选 **`/docs`** → Save。
+
+约 1～2 分钟后可访问（将下面 `你的用户名` 若为组织则替换）：
+
+- 隐私政策 URL（填 App Store Connect）：`https://blackwhalee.github.io/Qwen3-TTS-Mac-GeneLab/privacy-policy.html`
+- 支持 URL：`https://blackwhalee.github.io/Qwen3-TTS-Mac-GeneLab/support.html`
+
+若 Pages 使用自定义域名，把上述域名换成你的域名即可。

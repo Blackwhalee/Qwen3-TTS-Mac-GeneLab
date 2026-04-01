@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>隐私政策 — 黑鲸自定义 TTS（YujieTTS）</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; max-width: 42rem; margin: 2rem auto; padding: 0 1rem; line-height: 1.6; color: #1a1a1a; }
+    h1 { font-size: 1.5rem; }
+    h2 { font-size: 1.15rem; margin-top: 1.5rem; }
+    p, li { font-size: 0.95rem; }
+    .muted { color: #555; font-size: 0.85rem; }
+    a { color: #0969da; }
+  </style>
+</head>
+<body>
+  <h1>隐私政策</h1>
+  <p class="muted">适用于 macOS 应用「黑鲸自定义 TTS」（Bundle ID：<code>com.blackwhale.YujieTTS</code>）。最后更新日期：2026 年 4 月 1 日。</p>
+
+  <h2>1. 概要</h2>
+  <p>本应用主要在您的 Mac 本地完成文本转语音（TTS）推理。我们不会将您的朗读文本或生成的语音用于广告画像，也不出售个人数据。</p>
+
+  <h2>2. 本机处理与存储</h2>
+  <ul>
+    <li>语音合成模型、Python 运行环境与项目代码在首次启动时下载至您用户目录下的应用数据文件夹（Apple 沙盒内），并在本地运行。</li>
+    <li>生成历史、音频片段、语音相关配置等默认保存在本机应用支持目录内，不上传至我们运营的服务器（我们未为此 App 部署用于收集用户内容的中央后端）。</li>
+    <li>内购相关的「首次免费是否已使用」「剩余次数」等状态使用系统提供的本地存储（UserDefaults）记录，用于兑现购买与免费策略。</li>
+  </ul>
+
+  <h2>3. 网络访问</h2>
+  <ul>
+    <li><strong>首次引导：</strong>可能从 GitHub Releases 等平台下载打包好的环境与源码归档（仅用于安装运行所需文件）。</li>
+    <li><strong>模型与依赖：</strong>可能通过 Hugging Face Hub 等渠道下载或更新机器学习模型与相关资源；该过程受第三方服务条款与其隐私政策约束。</li>
+    <li><strong>App 内购买：</strong>由 Apple 的 App Store / StoreKit 处理；我们不直接接收您的银行卡信息。</li>
+  </ul>
+
+  <h2>4. 跟踪与第三方 SDK</h2>
+  <p>本应用隐私清单中声明<strong>不启用跨轨跟踪</strong>；未集成用于广告追踪的第三方分析 SDK。若未来版本有变更，将更新本页面与 App 内说明。</p>
+
+  <h2>5. 儿童</h2>
+  <p>本应用面向普通用户，不刻意以未满 13 周岁儿童为主要受众。若您为监护人且对数据处理有疑问，请通过下方方式联系我们。</p>
+
+  <h2>6. 变更</h2>
+  <p>我们可能随版本更新修订本政策；重大变更时在合理范围内通过应用更新说明或本页顶部的「最后更新日期」提示。</p>
+
+  <h2>7. 联系我们</h2>
+  <p>有关本隐私政策或本应用数据实践的问题，请通过 App Store 产品页上公布的<strong>支持链接</strong>或<strong>开发者网站</strong>中提供的方式联系开发者。</p>
+  <p class="muted">开源与问题反馈：<a href="https://github.com/Blackwhalee/Qwen3-TTS-Mac-GeneLab/issues" rel="noopener">GitHub Issues</a>（可选）。</p>
+</body>
+</html>
