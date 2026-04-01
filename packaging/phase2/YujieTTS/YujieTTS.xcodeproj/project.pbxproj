@@ -1,0 +1,435 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		189D328BC831AE981185F585 /* AudioService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9A19082D566FE97497DE937 /* AudioService.swift */; };
+		18F8A0C18AE20B03D8A9393C /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A705B7E05CB3B18ED529A0 /* HistoryView.swift */; };
+		3D975D6C707836F227B02CB9 /* VoiceProfileSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = E306FE7A63EEE3FF39EF93C1 /* VoiceProfileSnapshot.swift */; };
+		4C2D62FDCB28248DE10D30BB /* GenerationHistoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784D21C308706E4FF404B34A /* GenerationHistoryStore.swift */; };
+		5027F66A5562C4878C101156 /* ProcessManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F8A9B496E8C1152AC1DB7D8 /* ProcessManager.swift */; };
+		5C17D001DE3730DF38D51C4A /* VoiceLibraryEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E5E511C31714F0421BE1F8 /* VoiceLibraryEntry.swift */; };
+		66BC1C466105A912C1FF3576 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE2AC0327094DCE118761A5 /* SettingsView.swift */; };
+		68FF44AE9BA6F16AA2F61774 /* EngineService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A617C7E09D6BF6A1BEB9FD1 /* EngineService.swift */; };
+		7134A5D4EA8C915BBE8D4112 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B03318F18549C9C914882F /* App.swift */; };
+		7B342850EBBD181D56AD1006 /* EnvironmentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE52930B99A83813F5B408D7 /* EnvironmentManager.swift */; };
+		84F887BBEB166E6467F0743F /* VoiceConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79C9882F2DA80864E82F60 /* VoiceConfig.swift */; };
+		9711E9A58D03308D7D800555 /* yujie.json in Resources */ = {isa = PBXBuildFile; fileRef = D657FB9C4A5DA9131B3D24F6 /* yujie.json */; };
+		997D55E7D8BE6699AF31D644 /* GenerationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42BF5AF90143AA21A2222DC /* GenerationResult.swift */; };
+		9BAADF734956CFC34FA2EF31 /* VoiceLibraryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0872BE47891B7731030A0869 /* VoiceLibraryStore.swift */; };
+		9FD947D24A69523D9F3490CA /* VoiceConfigPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E642F7F87F6D655897695D3F /* VoiceConfigPanel.swift */; };
+		B8A00776FA2120D865B99D33 /* TextInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47913A1EC8F7D1478F61B243 /* TextInputView.swift */; };
+		C465B0E395825E3ECAA0A432 /* PlaybackBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFEC3B8EB1EB582B1AAFB7B5 /* PlaybackBar.swift */; };
+		E55B85084072D4EABA4ABA18 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8490557AF2EB176A52B242B /* MainView.swift */; };
+		F4575B9AA2C5AD8E79E0BADA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 777DC2C1CA53426720696CD3 /* Assets.xcassets */; };
+		FD833B93D156EE39995CD52C /* BootstrapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96A1FE2F8EC1D72782643E9E /* BootstrapView.swift */; };
+		B1E8A2010003D566FE974903 /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E8A2010001D566FE974901 /* PurchaseManager.swift */; };
+		B1E8A2010004D566FE974904 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E8A2010002D566FE974902 /* PaywallView.swift */; };
+		C1A2B3010002D566FE974902 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = C1A2B3010001D566FE974901 /* PrivacyInfo.xcprivacy */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0872BE47891B7731030A0869 /* VoiceLibraryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceLibraryStore.swift; sourceTree = "<group>"; };
+		09E5E511C31714F0421BE1F8 /* VoiceLibraryEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceLibraryEntry.swift; sourceTree = "<group>"; };
+		30A705B7E05CB3B18ED529A0 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
+		47913A1EC8F7D1478F61B243 /* TextInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInputView.swift; sourceTree = "<group>"; };
+		5A617C7E09D6BF6A1BEB9FD1 /* EngineService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineService.swift; sourceTree = "<group>"; };
+		5B79C9882F2DA80864E82F60 /* VoiceConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceConfig.swift; sourceTree = "<group>"; };
+		63EE750AA3578D9C4793DC53 /* YujieTTS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YujieTTS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		701B6257F8465EF4F0DA16CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		C1A2B3010001D566FE974901 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		777DC2C1CA53426720696CD3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		784D21C308706E4FF404B34A /* GenerationHistoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerationHistoryStore.swift; sourceTree = "<group>"; };
+		8F8A9B496E8C1152AC1DB7D8 /* ProcessManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessManager.swift; sourceTree = "<group>"; };
+		96A1FE2F8EC1D72782643E9E /* BootstrapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BootstrapView.swift; sourceTree = "<group>"; };
+		CE52930B99A83813F5B408D7 /* EnvironmentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentManager.swift; sourceTree = "<group>"; };
+		CFE2AC0327094DCE118761A5 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		D003A1A882CFF5637670FAC9 /* YujieTTS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = YujieTTS.entitlements; sourceTree = "<group>"; };
+		D2B03318F18549C9C914882F /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
+		D42BF5AF90143AA21A2222DC /* GenerationResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerationResult.swift; sourceTree = "<group>"; };
+		D657FB9C4A5DA9131B3D24F6 /* yujie.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = yujie.json; sourceTree = "<group>"; };
+		E306FE7A63EEE3FF39EF93C1 /* VoiceProfileSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceProfileSnapshot.swift; sourceTree = "<group>"; };
+		E642F7F87F6D655897695D3F /* VoiceConfigPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceConfigPanel.swift; sourceTree = "<group>"; };
+		EFEC3B8EB1EB582B1AAFB7B5 /* PlaybackBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackBar.swift; sourceTree = "<group>"; };
+		F8490557AF2EB176A52B242B /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		B1E8A2010001D566FE974901 /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
+		B1E8A2010002D566FE974902 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
+		F9A19082D566FE97497DE937 /* AudioService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioService.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		69657B8BFDD6C59914B64FA9 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				D42BF5AF90143AA21A2222DC /* GenerationResult.swift */,
+				5B79C9882F2DA80864E82F60 /* VoiceConfig.swift */,
+				09E5E511C31714F0421BE1F8 /* VoiceLibraryEntry.swift */,
+				E306FE7A63EEE3FF39EF93C1 /* VoiceProfileSnapshot.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		83FD40EC28E35FB637220FA9 /* YujieTTS */ = {
+			isa = PBXGroup;
+			children = (
+				D2B03318F18549C9C914882F /* App.swift */,
+				777DC2C1CA53426720696CD3 /* Assets.xcassets */,
+				701B6257F8465EF4F0DA16CB /* Info.plist */,
+				C1A2B3010001D566FE974901 /* PrivacyInfo.xcprivacy */,
+				D003A1A882CFF5637670FAC9 /* YujieTTS.entitlements */,
+				69657B8BFDD6C59914B64FA9 /* Models */,
+				AA6E019FA80A88659D566A09 /* Resources */,
+				BAD42376BD7D233A4E65E739 /* Services */,
+				ACFA6A9879CD31CA6A6254EC /* Views */,
+			);
+			path = YujieTTS;
+			sourceTree = "<group>";
+		};
+		AA6E019FA80A88659D566A09 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				B384D21A6287B62A0692A535 /* default-voices */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		ACFA6A9879CD31CA6A6254EC /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				96A1FE2F8EC1D72782643E9E /* BootstrapView.swift */,
+				30A705B7E05CB3B18ED529A0 /* HistoryView.swift */,
+				F8490557AF2EB176A52B242B /* MainView.swift */,
+				EFEC3B8EB1EB582B1AAFB7B5 /* PlaybackBar.swift */,
+				CFE2AC0327094DCE118761A5 /* SettingsView.swift */,
+				47913A1EC8F7D1478F61B243 /* TextInputView.swift */,
+				E642F7F87F6D655897695D3F /* VoiceConfigPanel.swift */,
+				B1E8A2010002D566FE974902 /* PaywallView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		B384D21A6287B62A0692A535 /* default-voices */ = {
+			isa = PBXGroup;
+			children = (
+				D657FB9C4A5DA9131B3D24F6 /* yujie.json */,
+			);
+			path = "default-voices";
+			sourceTree = "<group>";
+		};
+		BAD42376BD7D233A4E65E739 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				F9A19082D566FE97497DE937 /* AudioService.swift */,
+				5A617C7E09D6BF6A1BEB9FD1 /* EngineService.swift */,
+				CE52930B99A83813F5B408D7 /* EnvironmentManager.swift */,
+				784D21C308706E4FF404B34A /* GenerationHistoryStore.swift */,
+				8F8A9B496E8C1152AC1DB7D8 /* ProcessManager.swift */,
+				0872BE47891B7731030A0869 /* VoiceLibraryStore.swift */,
+				B1E8A2010001D566FE974901 /* PurchaseManager.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		DE7839E8B2AF219C8E7DDD9F = {
+			isa = PBXGroup;
+			children = (
+				83FD40EC28E35FB637220FA9 /* YujieTTS */,
+				F042ADE375353D690AA8EA8A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F042ADE375353D690AA8EA8A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				63EE750AA3578D9C4793DC53 /* YujieTTS.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		12CC6B5677222227FE48A1A9 /* YujieTTS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A2E9E6EF68F0A7190B54C7DD /* Build configuration list for PBXNativeTarget "YujieTTS" */;
+			buildPhases = (
+				968311800B0C45F41DA9793D /* Sources */,
+				F5D80081A6CF0BD380FECC45 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = YujieTTS;
+			packageProductDependencies = (
+			);
+			productName = YujieTTS;
+			productReference = 63EE750AA3578D9C4793DC53 /* YujieTTS.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3BC84857AF073419D59A1226 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					12CC6B5677222227FE48A1A9 = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = CD8EBF17F5418E15300A7066 /* Build configuration list for PBXProject "YujieTTS" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = DE7839E8B2AF219C8E7DDD9F;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = F042ADE375353D690AA8EA8A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				12CC6B5677222227FE48A1A9 /* YujieTTS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F5D80081A6CF0BD380FECC45 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4575B9AA2C5AD8E79E0BADA /* Assets.xcassets in Resources */,
+				9711E9A58D03308D7D800555 /* yujie.json in Resources */,
+				C1A2B3010002D566FE974902 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		968311800B0C45F41DA9793D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7134A5D4EA8C915BBE8D4112 /* App.swift in Sources */,
+				189D328BC831AE981185F585 /* AudioService.swift in Sources */,
+				FD833B93D156EE39995CD52C /* BootstrapView.swift in Sources */,
+				68FF44AE9BA6F16AA2F61774 /* EngineService.swift in Sources */,
+				7B342850EBBD181D56AD1006 /* EnvironmentManager.swift in Sources */,
+				4C2D62FDCB28248DE10D30BB /* GenerationHistoryStore.swift in Sources */,
+				997D55E7D8BE6699AF31D644 /* GenerationResult.swift in Sources */,
+				18F8A0C18AE20B03D8A9393C /* HistoryView.swift in Sources */,
+				E55B85084072D4EABA4ABA18 /* MainView.swift in Sources */,
+				C465B0E395825E3ECAA0A432 /* PlaybackBar.swift in Sources */,
+				5027F66A5562C4878C101156 /* ProcessManager.swift in Sources */,
+				66BC1C466105A912C1FF3576 /* SettingsView.swift in Sources */,
+				B8A00776FA2120D865B99D33 /* TextInputView.swift in Sources */,
+				84F887BBEB166E6467F0743F /* VoiceConfig.swift in Sources */,
+				9FD947D24A69523D9F3490CA /* VoiceConfigPanel.swift in Sources */,
+				5C17D001DE3730DF38D51C4A /* VoiceLibraryEntry.swift in Sources */,
+				9BAADF734956CFC34FA2EF31 /* VoiceLibraryStore.swift in Sources */,
+				3D975D6C707836F227B02CB9 /* VoiceProfileSnapshot.swift in Sources */,
+				B1E8A2010003D566FE974903 /* PurchaseManager.swift in Sources */,
+				B1E8A2010004D566FE974904 /* PaywallView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1323FAF2F681A0760643D46A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "黑鲸自定义TTS";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.10;
+			};
+			name = Debug;
+		};
+		2DAD4310C9E867DD1371C84A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "黑鲸自定义TTS";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.10;
+			};
+			name = Release;
+		};
+		CC01EF9BD16DBFDF24E7ABFD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = YujieTTS/YujieTTS.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = YujieTTS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.blackwhale.YujieTTS;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		E9E33C65258A0C9E610E2AB0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = YujieTTS/YujieTTS.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = YujieTTS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.blackwhale.YujieTTS;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A2E9E6EF68F0A7190B54C7DD /* Build configuration list for PBXNativeTarget "YujieTTS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E9E33C65258A0C9E610E2AB0 /* Debug */,
+				CC01EF9BD16DBFDF24E7ABFD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CD8EBF17F5418E15300A7066 /* Build configuration list for PBXProject "YujieTTS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1323FAF2F681A0760643D46A /* Debug */,
+				2DAD4310C9E867DD1371C84A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3BC84857AF073419D59A1226 /* Project object */;
+}

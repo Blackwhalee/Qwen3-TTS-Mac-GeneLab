@@ -119,6 +119,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# Xcode (user-specific)
+**/xcuserdata/
+
 # macOS
 .DS_Store
 .AppleDouble
