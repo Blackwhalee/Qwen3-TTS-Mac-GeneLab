@@ -487,6 +487,12 @@ class PyTorchMPSEngine:
         reference_sr: int = 24000,
         speed: float = 1.0,
         progress_callback: Callable[[float], None] | None = None,
+        temperature: float | None = None,
+        top_p: float | None = None,
+        top_k: int | None = None,
+        repetition_penalty: float | None = None,
+        do_sample: bool | None = None,
+        max_new_tokens: int | None = None,
     ) -> tuple[np.ndarray, int]:
         """音声を生成する。
 
@@ -516,6 +522,19 @@ class PyTorchMPSEngine:
 
         logger.info(f"PyTorch MPS で音声生成中: '{text[:50]}...'")
 
+        gen_extra: dict[str, Any] = {
+            k: v
+            for k, v in {
+                "temperature": temperature,
+                "top_p": top_p,
+                "top_k": top_k,
+                "repetition_penalty": repetition_penalty,
+                "do_sample": do_sample,
+                "max_new_tokens": max_new_tokens,
+            }.items()
+            if v is not None
+        }
+
         try:
             # CustomVoice の場合
             if task_type == TaskType.CUSTOM_VOICE:
@@ -527,6 +546,7 @@ class PyTorchMPSEngine:
                     speaker=speaker,
                     language=language,
                     instruct=instruct,
+                    **gen_extra,
                 )
                 audio = wavs[0] if isinstance(wavs, list) else wavs
 
@@ -542,6 +562,7 @@ class PyTorchMPSEngine:
                     text=text,
                     instruct=voice_description,
                     language=language,
+                    **gen_extra,
                 )
                 audio = wavs[0] if isinstance(wavs, list) else wavs
 
@@ -771,6 +792,12 @@ class DualEngine:
         reference_sr: int = 24000,
         speed: float = 1.0,
         progress_callback: Callable[[float], None] | None = None,
+        temperature: float | None = None,
+        top_p: float | None = None,
+        top_k: int | None = None,
+        repetition_penalty: float | None = None,
+        do_sample: bool | None = None,
+        max_new_tokens: int | None = None,
     ) -> GenerationResult:
         """音声を生成する。
 
@@ -833,6 +860,12 @@ class DualEngine:
                 reference_sr=reference_sr,
                 speed=speed,
                 progress_callback=progress_callback,
+                temperature=temperature,
+                top_p=top_p,
+                top_k=top_k,
+                repetition_penalty=repetition_penalty,
+                do_sample=do_sample,
+                max_new_tokens=max_new_tokens,
             )
             engine_used = EngineType.PYTORCH_MPS
 
