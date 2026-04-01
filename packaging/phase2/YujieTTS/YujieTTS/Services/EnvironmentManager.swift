@@ -105,6 +105,14 @@ final class EnvironmentManager: ObservableObject {
 
     private let logger = Logger(subsystem: "com.blackwhale.YujieTTS", category: "EnvManager")
 
+    /// 大文件下载：避免 `bytes` 整包读入 `Data` 导致内存暴涨与假死（环境包数百 MB）。
+    private static let downloadSession: URLSession = {
+        let cfg = URLSessionConfiguration.default
+        cfg.timeoutIntervalForResource = 7200
+        cfg.timeoutIntervalForRequest = 120
+        return URLSession(configuration: cfg)
+    }()
+
     // MARK: - Public API
 
     /// Full bootstrap: check → download env → extract → download model → ready
@@ -241,29 +249,61 @@ final class EnvironmentManager: ObservableObject {
     }
 
     private func downloadWithProgress(from url: URL, to dest: URL) async throws -> (URL, URLResponse) {
-        let (asyncBytes, response) = try await URLSession.shared.bytes(from: url)
-        let totalBytes = response.expectedContentLength
-        var downloadedBytes: Int64 = 0
-        var data = Data()
-        if totalBytes > 0 {
-            data.reserveCapacity(Int(totalBytes))
+        await MainActor.run {
+            self.progress = 0.02
+            self.statusText = "环境包较大，正在下载到磁盘（请耐心等待，勿关闭应用）…"
         }
 
-        for try await byte in asyncBytes {
-            data.append(byte)
-            downloadedBytes += 1
-            if totalBytes > 0 && downloadedBytes % (1024 * 256) == 0 {
-                let pct = Double(downloadedBytes) / Double(totalBytes)
-                await MainActor.run {
-                    self.progress = min(pct, 0.99)
-                    let mb = Double(downloadedBytes) / 1_048_576
-                    let totalMB = Double(totalBytes) / 1_048_576
-                    self.statusText = String(format: "下载中… %.0f / %.0f MB", mb, totalMB)
-                }
+        let tmp: URL
+        let response: URLResponse
+        do {
+            (tmp, response) = try await Self.downloadSession.download(from: url)
+        } catch {
+            let msg = (error as NSError).localizedDescription
+            throw EnvError.downloadFailed("网络错误：\(msg)")
+        }
+
+        guard let http = response as? HTTPURLResponse else {
+            try? FileManager.default.removeItem(at: tmp)
+            throw EnvError.downloadFailed("无效的 HTTP 响应")
+        }
+
+        guard (200...299).contains(http.statusCode) else {
+            let snippet = (try? String(contentsOf: tmp, encoding: .utf8))?.prefix(400) ?? ""
+            try? FileManager.default.removeItem(at: tmp)
+            if snippet.contains("<!DOCTYPE") || snippet.contains("<html") {
+                throw EnvError.downloadFailed(
+                    "HTTP \(http.statusCode)：收到网页而非安装包。请检查 Release 中是否仍有该资源，或网络是否需要代理。"
+                )
             }
+            throw EnvError.downloadFailed("HTTP \(http.statusCode)")
         }
 
-        try data.write(to: dest)
+        let attrs = try? FileManager.default.attributesOfItem(atPath: tmp.path)
+        let sz = (attrs?[.size] as? NSNumber)?.int64Value ?? 0
+        if sz < 512 * 1024 {
+            try? FileManager.default.removeItem(at: tmp)
+            throw EnvError.downloadFailed(
+                String(format: "下载文件过小（%lld 字节），链接可能失效或被墙。", sz)
+            )
+        }
+
+        await MainActor.run {
+            self.progress = 0.95
+            let mb = Double(sz) / 1_048_576
+            self.statusText = String(format: "下载完成（约 %.0f MB），准备解压…", mb)
+        }
+
+        if FileManager.default.fileExists(atPath: dest.path) {
+            try? FileManager.default.removeItem(at: dest)
+        }
+        do {
+            try FileManager.default.moveItem(at: tmp, to: dest)
+        } catch {
+            try? FileManager.default.removeItem(at: tmp)
+            throw EnvError.downloadFailed("保存文件失败：\(error.localizedDescription)")
+        }
+
         return (dest, response)
     }
 
@@ -341,15 +381,17 @@ final class EnvironmentManager: ObservableObject {
     enum EnvError: LocalizedError {
         case invalidURL(String)
         case extractFailed(String)
+        case downloadFailed(String)
         case pythonNotFound
         case modelDownloadFailed
 
         var errorDescription: String? {
             switch self {
             case .invalidURL(let u): return "无效的下载地址: \(u)"
-            case .extractFailed(let l): return "\(l)解压失败"
+            case .extractFailed(let l): return "\(l)解压失败（若环境包损坏，请删除应用数据后重试）"
+            case .downloadFailed(let m): return m
             case .pythonNotFound: return "Python 环境未就绪"
-            case .modelDownloadFailed: return "模型下载失败，请检查网络"
+            case .modelDownloadFailed: return "模型下载失败：请检查能否访问 Hugging Face；国内网络可能需要代理或在审核备注中说明。"
             }
         }
     }

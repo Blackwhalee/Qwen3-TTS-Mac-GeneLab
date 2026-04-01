@@ -28,6 +28,8 @@
 - [x] **6** — 已托管：**GitHub Release** [`Blackwhalee/-tts` · `v1.0`](https://github.com/Blackwhalee/-tts/releases/tag/v1.0)；`EnvironmentManager.swift` 已指向 `.../releases/download/v1.0/yujie-*.tar.gz`。
 
 - [ ] **7** — **（建议）** 在一台 **仅 Apple Silicon** 的 Mac 上删除应用容器数据后冷启动，验证能 **自动下载 → 解压 → 拉模型 → 进入主界面**（模型需能访问 Hugging Face；国内网络需自备镜像或说明）。
+  - **免网下测环境与源码：** 在本机先执行步骤 5 打出 `dist/yujie-*.tar.gz`，放到 **`~/Qwen3-TTS-Mac-GeneLab/dist/`**（与 `EnvironmentManager` 开发路径一致），再启动 App，会**优先走本地包**、不依赖 GitHub。
+  - **清除半装状态：** 若曾卡在「环境下载」：退出 App，删掉沙盒内 **`~/Library/Containers/com.blackwhale.YujieTTS/Data/Library/Application Support/YujieTTS`**（若路径因签名略有不同，可在访达「前往文件夹」搜 `YujieTTS`），再重开。当前版本已改为用 **磁盘流式下载** 大包，避免旧版整包进内存导致转圈假死。
 
 ## 阶段 C：Xcode 工程与签名
 
