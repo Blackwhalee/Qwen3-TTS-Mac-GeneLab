@@ -234,7 +234,8 @@ final class EnvironmentManager: ObservableObject {
                 throw EnvError.invalidURL(remoteURL)
             }
             let tempFile = Self.appSupportDir.appendingPathComponent(UUID().uuidString + ".tar.gz")
-            let (downloaded, _) = try await downloadWithProgress(from: url, to: tempFile)
+            let minBytes = Self.minimumBytesForRemoteTarball(urlString: remoteURL)
+            let (downloaded, _) = try await downloadWithProgress(from: url, to: tempFile, minimumBytes: minBytes)
             tarball = downloaded
         }
 
@@ -260,10 +261,19 @@ final class EnvironmentManager: ObservableObject {
         progress = 1.0
     }
 
-    private func downloadWithProgress(from url: URL, to dest: URL) async throws -> (URL, URLResponse) {
+    /// `yujie-project-src` 仅百余 KB 合法；`python-env` 应为数百 MB 级。
+    private nonisolated static func minimumBytesForRemoteTarball(urlString: String) -> Int64 {
+        if urlString.contains("yujie-project-src") { return 2048 }
+        if urlString.contains("yujie-python-env") { return 8 * 1024 * 1024 }
+        return 512 * 1024
+    }
+
+    private func downloadWithProgress(from url: URL, to dest: URL, minimumBytes: Int64) async throws -> (URL, URLResponse) {
         await MainActor.run {
             self.progress = 0.02
-            self.statusText = "环境包较大，正在下载到磁盘（请耐心等待，勿关闭应用）…"
+            self.statusText = minimumBytes < 1024 * 1024
+                ? "正在下载项目源码包…"
+                : "环境包较大，正在下载到磁盘（请耐心等待，勿关闭应用）…"
         }
 
         let tmp: URL
@@ -293,10 +303,10 @@ final class EnvironmentManager: ObservableObject {
 
         let attrs = try? FileManager.default.attributesOfItem(atPath: tmp.path)
         let sz = (attrs?[.size] as? NSNumber)?.int64Value ?? 0
-        if sz < 512 * 1024 {
+        if sz < minimumBytes {
             try? FileManager.default.removeItem(at: tmp)
             throw EnvError.downloadFailed(
-                String(format: "下载文件过小（%lld 字节），链接可能失效或被墙。", sz)
+                String(format: "下载文件过小（%lld 字节），低于预期 %lld，链接可能失效或被墙。", sz, minimumBytes)
             )
         }
 
@@ -328,8 +338,14 @@ final class EnvironmentManager: ObservableObject {
             return
         }
 
+        // conda-unpack 实为 Python 脚本，须用打包环境内的 python3 执行（勿用 bash）。
+        let python = Self.pythonEnvDir.appendingPathComponent("bin/python3")
+        guard FileManager.default.fileExists(atPath: python.path) else {
+            logger.warning("python3 not found, skipping conda-unpack")
+            return
+        }
         let proc = Process()
-        proc.executableURL = URL(fileURLWithPath: "/bin/bash")
+        proc.executableURL = python
         proc.arguments = [unpackScript.path]
         proc.environment = ["PATH": Self.pythonEnvDir.appendingPathComponent("bin").path + ":/usr/bin:/bin"]
         try proc.run()

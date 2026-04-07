@@ -72,6 +72,13 @@ final class PurchaseManager: ObservableObject {
             products = loaded.sorted { $0.id < $1.id }
             purchaseError = products.isEmpty ? "未找到内购商品，请在 App Store Connect 配置后重试。" : nil
         } catch {
+            let ne = error as NSError
+            // macOS 未登录 App Store / 无沙盒账户时常见，本地自测可忽略。
+            if ne.domain == "ASDErrorDomain", ne.code == 509 {
+                products = []
+                purchaseError = nil
+                return
+            }
             purchaseError = error.localizedDescription
             products = []
         }
