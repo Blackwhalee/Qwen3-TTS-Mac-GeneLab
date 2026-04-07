@@ -92,7 +92,38 @@ final class EnvironmentManager: ObservableObject {
 
     nonisolated static var pythonEnvDir: URL { appSupportDir.appendingPathComponent("python-env", isDirectory: true) }
     nonisolated static var projectSrcDir: URL { appSupportDir.appendingPathComponent("project-src", isDirectory: true) }
-    nonisolated static var pythonBin: URL { pythonEnvDir.appendingPathComponent("bin/python3") }
+
+    /// conda-pack 解压后通常直接是 `…/bin/python3`；少数情况会多套一层目录（如环境名），须动态解析。
+    nonisolated static func resolvedPythonEnvironmentRoot() -> URL {
+        let root = pythonEnvDir
+        let fm = FileManager.default
+        func hasInterpreter(in base: URL) -> Bool {
+            fm.isExecutableFile(atPath: base.appendingPathComponent("bin/python3").path)
+                || fm.isExecutableFile(atPath: base.appendingPathComponent("bin/python").path)
+        }
+        if hasInterpreter(in: root) { return root }
+        guard let subs = try? fm.contentsOfDirectory(
+            at: root,
+            includingPropertiesForKeys: [.isDirectoryKey],
+            options: [.skipsHiddenFiles]
+        ) else { return root }
+        for sub in subs {
+            var isDir: ObjCBool = false
+            guard fm.fileExists(atPath: sub.path, isDirectory: &isDir), isDir.boolValue else { continue }
+            if hasInterpreter(in: sub) { return sub }
+        }
+        return root
+    }
+
+    nonisolated static var pythonBin: URL {
+        let r = resolvedPythonEnvironmentRoot()
+        let fm = FileManager.default
+        let py3 = r.appendingPathComponent("bin/python3")
+        if fm.isExecutableFile(atPath: py3.path) { return py3 }
+        let py = r.appendingPathComponent("bin/python")
+        if fm.isExecutableFile(atPath: py.path) { return py }
+        return py3
+    }
     nonisolated static var engineScript: URL { projectSrcDir.appendingPathComponent("packaging/phase2/scripts/engine_server.py") }
 
     nonisolated static var modelSnapshotDir: URL {
@@ -103,7 +134,7 @@ final class EnvironmentManager: ObservableObject {
     /// 传给 Python 子进程（App Sandbox 内 HF 缓存路径 + 依赖 PATH）
     nonisolated static func pythonProcessEnvironment(extra: [String: String] = [:]) -> [String: String] {
         var env: [String: String] = [
-            "PATH": pythonEnvDir.appendingPathComponent("bin").path + ":/usr/bin:/bin",
+            "PATH": resolvedPythonEnvironmentRoot().appendingPathComponent("bin").path + ":/usr/bin:/bin",
             "PYTHONPATH": projectSrcDir.path,
             "HF_HOME": huggingFaceHome.path,
             "HUGGINGFACE_HUB_CACHE": huggingFaceHome.appendingPathComponent("hub").path,
@@ -135,7 +166,7 @@ final class EnvironmentManager: ObservableObject {
             try FileManager.default.createDirectory(at: Self.appSupportDir, withIntermediateDirectories: true)
             try FileManager.default.createDirectory(at: Self.huggingFaceHome, withIntermediateDirectories: true)
 
-            let envOK = FileManager.default.fileExists(atPath: Self.pythonBin.path)
+            let envOK = FileManager.default.isExecutableFile(atPath: Self.pythonBin.path)
             let srcOK = FileManager.default.fileExists(atPath: Self.engineScript.path)
             let modelOK = Self.isModelCached()
 
@@ -193,7 +224,7 @@ final class EnvironmentManager: ObservableObject {
     /// Check if everything is in place without downloading.
     nonisolated static func isEnvironmentReady() -> Bool {
         let fm = FileManager.default
-        return fm.fileExists(atPath: pythonBin.path)
+        return fm.isExecutableFile(atPath: pythonBin.path)
             && fm.fileExists(atPath: engineScript.path)
             && isModelCached()
     }
@@ -332,22 +363,22 @@ final class EnvironmentManager: ObservableObject {
     // MARK: - Private: conda-unpack
 
     private func runCondaUnpack() async throws {
-        let unpackScript = Self.pythonEnvDir.appendingPathComponent("bin/conda-unpack")
+        let envRoot = Self.resolvedPythonEnvironmentRoot()
+        let unpackScript = envRoot.appendingPathComponent("bin/conda-unpack")
         guard FileManager.default.fileExists(atPath: unpackScript.path) else {
             logger.warning("conda-unpack not found, skipping (may still work)")
             return
         }
 
-        // conda-unpack 实为 Python 脚本，须用打包环境内的 python3 执行（勿用 bash）。
-        let python = Self.pythonEnvDir.appendingPathComponent("bin/python3")
-        guard FileManager.default.fileExists(atPath: python.path) else {
-            logger.warning("python3 not found, skipping conda-unpack")
+        let python = Self.pythonBin
+        guard FileManager.default.isExecutableFile(atPath: python.path) else {
+            logger.warning("python interpreter not found, skipping conda-unpack")
             return
         }
         let proc = Process()
         proc.executableURL = python
         proc.arguments = [unpackScript.path]
-        proc.environment = ["PATH": Self.pythonEnvDir.appendingPathComponent("bin").path + ":/usr/bin:/bin"]
+        proc.environment = ["PATH": envRoot.appendingPathComponent("bin").path + ":/usr/bin:/bin"]
         try proc.run()
         proc.waitUntilExit()
         if proc.terminationStatus != 0 {
@@ -359,7 +390,7 @@ final class EnvironmentManager: ObservableObject {
 
     private func downloadModel() async throws {
         let python = Self.pythonBin.path
-        guard FileManager.default.fileExists(atPath: python) else {
+        guard FileManager.default.isExecutableFile(atPath: python) else {
             throw EnvError.pythonNotFound
         }
 
