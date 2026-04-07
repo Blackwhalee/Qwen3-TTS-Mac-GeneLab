@@ -61,6 +61,7 @@ struct PaywallView: View {
         }
         .padding(28)
         .frame(minWidth: 480)
+        .onAppear { purchases.activateStoreKitIfNeeded() }
         .onChange(of: purchases.creditBalance) { _, _ in
             if purchases.canStartGeneration { dismiss() }
         }

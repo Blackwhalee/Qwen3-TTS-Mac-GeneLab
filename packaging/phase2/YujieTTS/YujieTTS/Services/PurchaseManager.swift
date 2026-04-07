@@ -19,6 +19,8 @@ final class PurchaseManager: ObservableObject {
     @Published private(set) var isPurchasing = false
 
     private var updatesTask: Task<Void, Never>?
+    /// 未调用前不连接 StoreKit，可减少本机未登录 App Store 时控制台反复出现 ASD 509。
+    private var storeKitActivated = false
 
     private let defaults = UserDefaults.standard
     private let kFree = "YujieTTS.freeGenerationConsumed"
@@ -30,6 +32,12 @@ final class PurchaseManager: ObservableObject {
         creditBalance = defaults.integer(forKey: kCredits)
         freeGenerationConsumed = defaults.bool(forKey: kFree)
         lifetimeUnlocked = defaults.bool(forKey: kLifetimeCache)
+    }
+
+    /// 进入 Paywall / 设置内购区或发起购买前调用；避免 App 一启动就注册 Transaction 监听。
+    func activateStoreKitIfNeeded() {
+        guard !storeKitActivated else { return }
+        storeKitActivated = true
         updatesTask = Task { await self.listenForTransactions() }
         Task { await loadProducts(); await refreshLifetimeFromStore() }
     }
@@ -94,6 +102,7 @@ final class PurchaseManager: ObservableObject {
     }
 
     func purchase(_ product: Product) async {
+        activateStoreKitIfNeeded()
         isPurchasing = true
         purchaseError = nil
         defer { isPurchasing = false }
@@ -118,6 +127,7 @@ final class PurchaseManager: ObservableObject {
     }
 
     func restorePurchases() async {
+        activateStoreKitIfNeeded()
         purchaseError = nil
         do {
             try await AppStore.sync()

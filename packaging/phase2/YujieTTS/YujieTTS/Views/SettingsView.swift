@@ -17,6 +17,7 @@ struct SettingsView: View {
         }
         .frame(width: 500, height: 400)
         .padding()
+        .onAppear { purchases.activateStoreKitIfNeeded() }
     }
 
     private var generalSettings: some View {
