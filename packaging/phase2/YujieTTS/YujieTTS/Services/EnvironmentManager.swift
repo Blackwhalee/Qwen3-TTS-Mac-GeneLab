@@ -202,6 +202,14 @@ final class EnvironmentManager: ObservableObject {
             try FileManager.default.createDirectory(at: Self.appSupportDir, withIntermediateDirectories: true)
             try FileManager.default.createDirectory(at: Self.huggingFaceHome, withIntermediateDirectories: true)
 
+            // 解压/下载得到的 Mach-O 常带 com.apple.quarantine，会导致 isExecutableFile 失败或无法启动子进程
+            if FileManager.default.fileExists(atPath: Self.pythonEnvDir.path) {
+                await stripQuarantineFromTree(at: Self.pythonEnvDir)
+            }
+            if FileManager.default.fileExists(atPath: Self.projectSrcDir.path) {
+                await stripQuarantineFromTree(at: Self.projectSrcDir)
+            }
+
             let envOK = FileManager.default.isExecutableFile(atPath: Self.pythonBin.path)
             let srcOK = FileManager.default.fileExists(atPath: Self.engineScript.path)
             let modelOK = Self.isModelCached()
@@ -321,11 +329,30 @@ final class EnvironmentManager: ObservableObject {
             throw EnvError.extractFailed(label)
         }
 
+        await stripQuarantineFromTree(at: destDir)
+
         // Clean up downloaded temp file (but not local pre-built ones)
         if localFile == nil {
             try? FileManager.default.removeItem(at: tarball)
         }
         progress = 1.0
+    }
+
+    /// 移除 Gatekeeper 隔离属性，否则沙盒内可能无法执行 conda 环境中的 python 与动态库。
+    private func stripQuarantineFromTree(at root: URL) async {
+        guard FileManager.default.fileExists(atPath: root.path) else { return }
+        let proc = Process()
+        proc.executableURL = URL(fileURLWithPath: "/usr/bin/xattr")
+        proc.arguments = ["-dr", "com.apple.quarantine", root.path]
+        do {
+            try proc.run()
+            proc.waitUntilExit()
+            if proc.terminationStatus != 0 {
+                logger.warning("xattr quarantine strip exited \(proc.terminationStatus) for \(root.path)")
+            }
+        } catch {
+            logger.warning("xattr failed: \(error.localizedDescription)")
+        }
     }
 
     /// `yujie-project-src` 仅百余 KB 合法；`python-env` 应为数百 MB 级。
