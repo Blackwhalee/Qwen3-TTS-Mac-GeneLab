@@ -93,36 +93,70 @@ final class EnvironmentManager: ObservableObject {
     nonisolated static var pythonEnvDir: URL { appSupportDir.appendingPathComponent("python-env", isDirectory: true) }
     nonisolated static var projectSrcDir: URL { appSupportDir.appendingPathComponent("project-src", isDirectory: true) }
 
-    /// conda-pack 解压后通常直接是 `…/bin/python3`；少数情况会多套一层目录（如环境名），须动态解析。
-    nonisolated static func resolvedPythonEnvironmentRoot() -> URL {
-        let root = pythonEnvDir
+    /// 在 `python-env` 下查找真实解释器：可能仅有 `python3.12`、`bin` 在子目录内等。
+    nonisolated static func findPythonInterpreterUnderEnvRoot() -> URL? {
         let fm = FileManager.default
-        func hasInterpreter(in base: URL) -> Bool {
-            fm.isExecutableFile(atPath: base.appendingPathComponent("bin/python3").path)
-                || fm.isExecutableFile(atPath: base.appendingPathComponent("bin/python").path)
+        let root = pythonEnvDir
+        let preferredNames = ["python3", "python", "python3.13", "python3.12", "python3.11", "python3.10"]
+
+        func pick(inBinDir bin: URL) -> URL? {
+            for name in preferredNames {
+                let p = bin.appendingPathComponent(name)
+                if fm.isExecutableFile(atPath: p.path) { return p }
+            }
+            guard let files = try? fm.contentsOfDirectory(at: bin, includingPropertiesForKeys: nil) else { return nil }
+            for f in files {
+                let n = f.lastPathComponent
+                guard n.hasPrefix("python"), !n.hasSuffix(".dylib") else { continue }
+                if fm.isExecutableFile(atPath: f.path) { return f }
+            }
+            return nil
         }
-        if hasInterpreter(in: root) { return root }
-        guard let subs = try? fm.contentsOfDirectory(
-            at: root,
-            includingPropertiesForKeys: [.isDirectoryKey],
-            options: [.skipsHiddenFiles]
-        ) else { return root }
+
+        func tryEnvRoot(_ envRoot: URL) -> URL? {
+            pick(inBinDir: envRoot.appendingPathComponent("bin"))
+        }
+
+        if let u = tryEnvRoot(root) { return u }
+        guard let subs = try? fm.contentsOfDirectory(at: root, includingPropertiesForKeys: [.isDirectoryKey], options: [.skipsHiddenFiles]) else {
+            return nil
+        }
         for sub in subs {
             var isDir: ObjCBool = false
             guard fm.fileExists(atPath: sub.path, isDirectory: &isDir), isDir.boolValue else { continue }
-            if hasInterpreter(in: sub) { return sub }
+            if let u = tryEnvRoot(sub) { return u }
+            if let subs2 = try? fm.contentsOfDirectory(at: sub, includingPropertiesForKeys: nil) {
+                for sub2 in subs2 {
+                    var isD2: ObjCBool = false
+                    guard fm.fileExists(atPath: sub2.path, isDirectory: &isD2), isD2.boolValue else { continue }
+                    if let u = tryEnvRoot(sub2) { return u }
+                }
+            }
         }
-        return root
+
+        if let en = fm.enumerator(at: root, includingPropertiesForKeys: [.isRegularFileKey], options: [.skipsHiddenFiles]) {
+            for case let item as URL in en {
+                guard item.path.contains("/bin/") else { continue }
+                let n = item.lastPathComponent
+                guard n.hasPrefix("python"), !n.hasSuffix(".dylib") else { continue }
+                if fm.isExecutableFile(atPath: item.path) { return item }
+            }
+        }
+        return nil
+    }
+
+    /// conda-pack 解压后的环境根目录（含 `bin/` 的那一层）。
+    nonisolated static func resolvedPythonEnvironmentRoot() -> URL {
+        if let interp = findPythonInterpreterUnderEnvRoot() {
+            return interp.deletingLastPathComponent().deletingLastPathComponent()
+        }
+        return pythonEnvDir
     }
 
     nonisolated static var pythonBin: URL {
+        if let u = findPythonInterpreterUnderEnvRoot() { return u }
         let r = resolvedPythonEnvironmentRoot()
-        let fm = FileManager.default
-        let py3 = r.appendingPathComponent("bin/python3")
-        if fm.isExecutableFile(atPath: py3.path) { return py3 }
-        let py = r.appendingPathComponent("bin/python")
-        if fm.isExecutableFile(atPath: py.path) { return py }
-        return py3
+        return r.appendingPathComponent("bin/python3")
     }
     nonisolated static var engineScript: URL { projectSrcDir.appendingPathComponent("packaging/phase2/scripts/engine_server.py") }
 
@@ -133,8 +167,10 @@ final class EnvironmentManager: ObservableObject {
 
     /// 传给 Python 子进程（App Sandbox 内 HF 缓存路径 + 依赖 PATH）
     nonisolated static func pythonProcessEnvironment(extra: [String: String] = [:]) -> [String: String] {
+        let binPath = findPythonInterpreterUnderEnvRoot()?.deletingLastPathComponent().path
+            ?? resolvedPythonEnvironmentRoot().appendingPathComponent("bin").path
         var env: [String: String] = [
-            "PATH": resolvedPythonEnvironmentRoot().appendingPathComponent("bin").path + ":/usr/bin:/bin",
+            "PATH": binPath + ":/usr/bin:/bin",
             "PYTHONPATH": projectSrcDir.path,
             "HF_HOME": huggingFaceHome.path,
             "HUGGINGFACE_HUB_CACHE": huggingFaceHome.appendingPathComponent("hub").path,
@@ -449,7 +485,8 @@ final class EnvironmentManager: ObservableObject {
             case .invalidURL(let u): return "无效的下载地址: \(u)"
             case .extractFailed(let l): return "\(l)解压失败（若环境包损坏，请删除应用数据后重试）"
             case .downloadFailed(let m): return m
-            case .pythonNotFound: return "Python 环境未就绪"
+            case .pythonNotFound:
+                return "未找到可用的 Python 解释器（已搜索 python-env 下各层 bin/）。请删除本应用数据后重试；若仍失败请重新打包 conda 环境。"
             case .modelDownloadFailed: return "模型下载失败：请检查能否访问 Hugging Face；国内网络可能需要代理或在审核备注中说明。"
             }
         }
