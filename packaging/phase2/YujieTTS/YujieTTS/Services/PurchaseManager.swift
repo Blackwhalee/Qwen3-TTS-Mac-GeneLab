@@ -46,14 +46,25 @@ final class PurchaseManager: ObservableObject {
         updatesTask?.cancel()
     }
 
+    /// **仅 Debug**：不拦生成、不扣次数、不连 StoreKit（正常 `Run` 即可测 TTS）。**Release/Archive 无此逻辑。**
+    private static var ignorePurchaseGateForDebugRun: Bool {
+        #if DEBUG
+        return true
+        #else
+        return false
+        #endif
+    }
+
     /// 是否允许开始一次新的生成（未计成功/失败，成功后在 UI 层调用 `recordSuccessfulGeneration()`）
     var canStartGeneration: Bool {
+        if Self.ignorePurchaseGateForDebugRun { return true }
         if lifetimeUnlocked { return true }
         if !freeGenerationConsumed { return true }
         return creditBalance > 0
     }
 
     func statusLine() -> String {
+        if Self.ignorePurchaseGateForDebugRun { return "调试：已跳过内购校验（Release 会恢复）" }
         if lifetimeUnlocked { return "已解锁：永久生成" }
         if !freeGenerationConsumed { return "首次生成免费" }
         if creditBalance > 0 { return "剩余 \(creditBalance) 次生成" }
@@ -62,6 +73,7 @@ final class PurchaseManager: ObservableObject {
 
     /// 仅在引擎返回成功并写入历史后调用
     func recordSuccessfulGeneration() {
+        if Self.ignorePurchaseGateForDebugRun { return }
         if lifetimeUnlocked { return }
         if !freeGenerationConsumed {
             freeGenerationConsumed = true
