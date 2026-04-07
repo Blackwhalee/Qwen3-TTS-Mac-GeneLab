@@ -14,7 +14,7 @@ struct BootstrapView: View {
                     .font(.system(size: 56))
                     .foregroundStyle(.cyan.gradient)
 
-                Text("黑鲸自定义TTS")
+                Text("黑鲸自定义克隆TTS")
                     .font(.largeTitle.bold())
                 Text("AI语音合成引擎")
                     .font(.title3)
@@ -30,7 +30,7 @@ struct BootstrapView: View {
 
             Spacer()
 
-            Text("黑鲸自定义TTS · Powered by Qwen3-TTS + MLX · Apple Silicon")
+            Text("黑鲸自定义克隆TTS · Powered by Qwen3-TTS + MLX · Apple Silicon")
                 .font(.caption2)
                 .foregroundStyle(.tertiary)
                 .padding(.bottom, 16)

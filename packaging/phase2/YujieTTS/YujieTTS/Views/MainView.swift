@@ -42,7 +42,7 @@ struct MainView: View {
                 Image(systemName: "waveform.circle.fill")
                     .font(.title2)
                     .foregroundStyle(.cyan)
-                Text("黑鲸自定义TTS")
+                Text("黑鲸自定义克隆TTS")
                     .font(.title2.bold())
                 Text("AI语音合成")
                     .font(.subheadline)

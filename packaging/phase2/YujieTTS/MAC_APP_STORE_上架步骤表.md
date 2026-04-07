@@ -1,4 +1,4 @@
-# Mac App Store 上架步骤表（黑鲸自定义 TTS / YujieTTS）
+# Mac App Store 上架步骤表（黑鲸自定义克隆 TTS / YujieTTS）
 
 > 用法：按序号做，做完一项在前面打 `[x]`。无法由 AI 代劳的步骤已标注 **（须本人）**。
 
